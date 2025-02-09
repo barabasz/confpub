@@ -1,11 +1,18 @@
 #!/bin/zsh
 
-# ANSI colors
-blue='\e[0;94m'
-yellow='\e[0;93m'
-green='\e[1;32m'
-red='\e[0;91m'
+# ANSI colors for functions
+## clear all
 clear='\e[0m'
+## text standard
+black='\e[0;30m'; red='\e[0;31m'; green='\e[0;32m'; yellow='\e[0;33m'; blue='\e[0;34m'; purple='\e[0;35m'; cyan='\e[0;36m'; white='\e[0;37m'
+## text bold
+blackb='\e[1;30m'; redb='\e[1;31m'; greenb='\e[1;32m'; yellowb='\e[1;33m'; blueb='\e[1;34m'; purpleb='\e[1;35m'; cyanb='\e[1;36m'; whiteb='\e[1;37m'
+## text intensive
+blacki='\e[0;90m'; redi='\e[0;91m'; greeni='\e[0;92m'; yellowi='\e[0;93m'; bluei='\e[0;94m'; purplei='\e[0;95m'; cyani='\e[0;96m'; whitei='\e[0;97m'
+## background standard
+bgblack='\e[40m'; bgred='\e[41m'; bggreen='\e[42m'; bgyellow='\e[43m'; bgblue='\e[44m'; bgpurple='\e[45m'; bgcyan='\e[46m'; bgwhite='\e[47m'
+## background intensive
+bgblacki='\e[0;100m'; bgredi='\e[0;101m'; bggreeni='\e[0;102m'; bgyellowi='\e[0;103m'; bgbluei='\e[0;104m'; bgpurplei='\e[0;105m'; bgcyani='\e[0;106m'; bgwhitei='\e[0;107m'
 
 # apt unattended quiet install
 function aptinstall() {
@@ -116,18 +123,12 @@ function osname() {
 
 # Print yellow header
 function printhead() {
-    bold='\e[1m'
-    yellow='\e[33m'
-    clear='\033[0m'
     output="\n${yellow}${bold}"$*"${clear}\n"
     printf "$output"
 }
 
 # Print green info
 function printinfo() {
-    bold='\e[1m'
-    green='\e[32m'
-    clear='\033[0m'
     output="\n${green}${bold}"$*"${clear}\n"
     printf "$output"
 }
@@ -188,25 +189,23 @@ function verinfo() {
         appname=$2
         vercmmd=$3
     fi
-
     type=$(utype $cliname)
-
     if [[ $type = 'file' || "$(which $cliname)" == /* ]]; then
         msg='is installed in'
         reg='\b[0-9]{1,}\.[0-9]{1,}(\.[0-9]{1,}){0,}\b'
         app="${green}${appname}${clear}"
         ver="$yellow$($cliname $vercmmd | grep -Eo $reg | head -1)$clear"
-        pth="$blue$(whereis -b $cliname | sed 's/.*: //')$clear"
+        pth="$purple$(whereis -b $cliname | sed 's/.*: //')$clear"
         echo -e "$app $ver $msg $pth"
     fi
     if [[ $type = 'alias' ]]; then
         msg='is an alias for'
-        als="${green}$cliname${clear} $msg ${blue}$(alias $cliname | sed "s/.*=//")${clear}"
+        als="${green}$cliname${clear} $msg ${purple}$(alias $cliname | sed "s/.*=//")${clear}"
         echo -e "$als"
     fi
     if [[ $type = 'function' || $type = 'keyword' || $type = 'builtin' ]]; then
         msg='is a'
-        als="${green}$cliname${clear} $msg ${blue}$type${clear}"
+        als="${green}$cliname${clear} $msg ${purple}$type${clear}"
         echo -e "$als"
     fi    
     if [[ -z $type ]]; then

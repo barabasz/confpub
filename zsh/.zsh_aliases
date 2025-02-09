@@ -52,3 +52,7 @@ alias gst='git status -s'
 if [[ "$(osname)" == "macos" ]]; then
     alias cal='/opt/homebrew/opt/util-linux/bin/cal -m3'
 fi
+
+if [[ "$(isinstalled gsed)" == "yes" ]]; then
+    alias sed='gsed'
+fi

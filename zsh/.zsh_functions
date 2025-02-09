@@ -123,9 +123,6 @@ if [[ "$(osname)" == "ubuntu" ]]; then
     }
 fi
 
-
-
-
 # Print yellow header
 function printhead() {
     output="\n${yellow}${bold}"$*"${clear}\n"

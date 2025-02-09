@@ -130,21 +130,19 @@ function fman() {
     man -k . | fzf -q "$1" --prompt='man> '  --preview $'echo {} | tr -d \'()\' | awk \'{printf "%s ", $2} {print $1}\' | xargs -r man | col -bx | bat -l man -p --color always' | tr -d '()' | awk '{printf "%s ", $2} {print $1}' | xargs -r man
 }
 
-# Short version info, usage: versioninfo cliname appname versioncommand
-# Regex: https://regex101.com/r/KhIknM/1
-function verinf() {
-    regexver='\b\d{1,}\.\d{1,}(\.\d{1,}){0,}\b'
-    message="is installed in"
+# Short version info, usage: verinfo cliname appname versioncommand
+# Example: verinfo gzip "GNU Zip" --version
+function verinfo() {
     blue='\e[0;94m'
     yellow='\e[38;5;227m'
     green='\e[1;32m'
     red='\e[38;5;196m'
     clear='\033[0m'
     if [[ -z "$1" ]]; then
-        echo "usage:$green verinf$clear cliname appname versioncommand"
+        echo -e "usage:$green verinf$clear cliname appname versioncommand"
         return 1
     elif [[ ! -z "$4" ]]; then
-        echo "too many parameters"
+        echo -e "too many parameters"
         return 1
     elif [[ -z "$2" ]]; then
         cliname=$1
@@ -159,13 +157,28 @@ function verinf() {
         appname=$2
         vercmmd=$3
     fi
-    if command -v "$1" > /dev/null 2>&1; then
+    type=$(type -t $cliname)
+    if [[ $type = 'file' || "$(which $cliname)" == /* ]]; then
+        msg='is installed in'
+        reg='\b[0-9]{1,}\.[0-9]{1,}(\.[0-9]{1,}){0,}\b'
         app="${green}${appname}${clear}"
-        ver="$yellow$($cliname $vercmmd | grep -Eo $regexver | head -1)$clear"
+        ver="$yellow$($cliname $vercmmd | grep -Eo $reg | head -1)$clear"
         pth="$blue$(whereis -b $cliname | sed 's/.*: //')$clear"
-        echo "$app $ver $message $pth"
-    else
-        echo "${red}$1${clear} is not available"
+        echo -e "$app $ver $msg $pth"
+    fi
+    if [[ $type = 'alias' ]]; then
+        msg='is an alias for'
+        als="${green}$cliname${clear} $msg ${blue}$(alias $cliname | sed "s/.*=//")${clear}"
+        echo -e "$als"
+    fi
+    if [[ $type = 'function' || $type = 'keyword' || $type = 'builtin' ]]; then
+        msg='is a'
+        als="${green}$cliname${clear} $msg ${blue}$type${clear}"
+        echo -e "$als"
+    fi    
+    if [[ -z $type ]]; then
+        msg="is not available"
+        echo -e "${red}$cliname${clear} $msg"
         return 2
     fi
 }

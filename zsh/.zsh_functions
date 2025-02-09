@@ -141,10 +141,10 @@ function verinf() {
     red='\e[38;5;196m'
     clear='\033[0m'
     if [[ -z "$1" ]]; then
-        print "usage:$green verinf$clear cliname appname versioncommand"
+        echo "usage:$green verinf$clear cliname appname versioncommand"
         return 1
     elif [[ ! -z "$4" ]]; then
-        print "too many parameters"
+        echo "too many parameters"
         return 1
     elif [[ -z "$2" ]]; then
         cliname=$1

@@ -16,6 +16,7 @@ export XDG_PROJECTS_DIR=${XDG_PROJECTS_DIR:-$HOME/Projects}
 # DIRECTORIES
 export BINDIR=$HOME/bin
 export HOMEDIR=$HOME
+export LIBDIR=$HOME/lib
 export GHDIR=$HOME/GitHub
 export GHBINDIR=$GHDIR/bin
 export GHCONFDIR=$GHDIR/config
@@ -23,9 +24,7 @@ export CONFDIR=$XDG_CONFIG_HOME
 
 # PATH
 # user scripts and binaries
-export PATH=$HOME/bin:$HOME/bin/install:$HOME/bin/test:$HOME/binos:/usr/local/bin:$PATH
-# Python
-export PATH="/Library/Frameworks/Python.framework/Versions/3.12/bin:${PATH}"
+export PATH=$BINDIR:$BINDIR/install:$BINDIR/test:$HOME/binos:/usr/local/bin:$PATH
 
 # Prompt fallback (will be override by p10k)
 export PS1="[%{%F{cyan}%}%n%{%f%}@%{%F{green}%}%m:%{%F{yellow}%}%~%{%f%}%]]$ "

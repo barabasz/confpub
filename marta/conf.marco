@@ -1,0 +1,17 @@
+environment {
+    terminal "iTerm"
+    textEditor "Visual Studio Code"
+}
+
+behavior {
+    theme "Kon"
+    
+    dateFormat {
+        normal "%Y-%m-%d"
+    }
+    timeFormat {
+        separator "  "
+        normal "%H:%M"
+    }
+    
+}

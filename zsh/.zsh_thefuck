@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+# The Fuck helper
+
+if [[ "$(isinstalled thefuck)" == "yes" ]]; then
+  eval $(thefuck --alias)
+fi

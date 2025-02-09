@@ -1,0 +1,9 @@
+[[plugin.deps]]
+use = "yazi-rs/plugins:mount"
+rev = "02d18be"
+hash = "9568ea5ec82fe3d99073a7341fda3da8"
+
+[[flavor.deps]]
+use = "kalidyasin/yazi-flavors:tokyonight-night"
+rev = "095d95c"
+hash = "845c5ee33e147b1a57f48728e42600ee"

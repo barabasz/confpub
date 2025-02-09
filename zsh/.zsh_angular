@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+# Load Angular CLI autocompletion
+
+if [[ "$(isinstalled ng)" == "yes" ]]; then
+  source <(ng completion script)
+fi

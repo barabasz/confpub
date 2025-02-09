@@ -1,0 +1,9 @@
+Home "~"
+Applications "${all.applications}"
+Downloads "${user.downloads}"
+Documents "${user.documents}"
+Desktop "${user.desktop}"
+Library "${user.library}"
+GitHub "/Users/barabasz/GitHub"
+
+

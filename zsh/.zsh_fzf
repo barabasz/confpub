@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+# fzf shell integration
+
+if [[ "$(isinstalled fzf)" == "yes" ]]; then
+  eval "$(fzf --zsh)"
+fi

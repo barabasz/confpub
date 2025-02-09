@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+# zoxide shell integration
+
+if [[ "$(isinstalled zoxide)" == "yes" ]]; then
+  eval "$(zoxide init zsh)"
+fi

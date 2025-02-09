@@ -28,7 +28,7 @@ export CONFDIR=$XDG_CONFIG_HOME
 export PATH=$BINDIR:$BINDIR/install:$BINDIR/test:$HOME/binos:/usr/local/bin:$PATH
 
 # Prompt fallback (will be override by p10k)
-export PS1="[%{%F{cyan}%}%n%{%f%}@%{%F{green}%}%m:%{%F{yellow}%}%~%{%f%}%]]$ "
+export PS1="[\[\033[36m\]\u\[\033[37m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]]$ "
 
 # Preferred editor
 export EDITOR='nvim'

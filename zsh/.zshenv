@@ -14,6 +14,7 @@ export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-$HOME/.xdg}
 export XDG_PROJECTS_DIR=${XDG_PROJECTS_DIR:-$HOME/Projects}
 
 # DIRECTORIES
+export ZDOTDIR=$HOME/.config/zsh
 export BINDIR=$HOME/bin
 export HOMEDIR=$HOME
 export LIBDIR=$HOME/lib

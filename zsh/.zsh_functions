@@ -88,25 +88,6 @@ function mdcd() {
     mkdir -p $1 && cd $_
 }
 
-# modify /etc/needrestart/needrestart.conf
-# use: needrestart-mod parameter value
-function needrestart-mod() {
-    filename=/etc/needrestart/needrestart.conf
-    sudo sed -i "s/^#\?\s\?\$nrconf{$1}.*/\$nrconf{$1} = $2;/" $filename
-}
-function needrestart-quiet() {
-    needrestart-mod verbosity 0
-    needrestart-mod systemctl_combine 0
-    needrestart-mod kernelhints 0
-    needrestart-mod ucodehints 0
-}
-function needrestart-verbose() {
-    needrestart-mod verbosity 1
-    needrestart-mod systemctl_combine 1
-    needrestart-mod kernelhints 1
-    needrestart-mod ucodehints 1
-}
-
 # Display OS name
 function osname() {
     if [[ -f /etc/os-release ]]; then
@@ -120,6 +101,30 @@ function osname() {
     osname=$(echo $osname | awk '{print tolower($0)}' | awk '{ gsub(/ /,""); print }')
     printf $osname
 }
+
+# modify /etc/needrestart/needrestart.conf
+# use: needrestart-mod parameter value
+if [[ "$(osname)" == "ubuntu" ]]; then
+    function needrestart-mod() {
+        filename=/etc/needrestart/needrestart.conf
+        sudo sed -i "s/^#\?\s\?\$nrconf{$1}.*/\$nrconf{$1} = $2;/" $filename
+    }
+    function needrestart-quiet() {
+        needrestart-mod verbosity 0
+        needrestart-mod systemctl_combine 0
+        needrestart-mod kernelhints 0
+        needrestart-mod ucodehints 0
+    }
+    function needrestart-verbose() {
+        needrestart-mod verbosity 1
+        needrestart-mod systemctl_combine 1
+        needrestart-mod kernelhints 1
+        needrestart-mod ucodehints 1
+    }
+fi
+
+
+
 
 # Print yellow header
 function printhead() {

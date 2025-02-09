@@ -21,15 +21,16 @@ source $ZSH/oh-my-zsh.sh
 # LOCALE
 source $ZDOTDIR/.zsh_locale
 
+# MODULES
+source $LIBDIR/ansi.sh
+source $LIBDIR/log.sh
+source $LIBDIR/colors.sh
+
 # FUNCTIONS
 source $ZDOTDIR/.zsh_functions
 
 # ALIASES
 source $ZDOTDIR/.zsh_aliases
-
-# MODULES
-source ~/lib/ansi.sh
-source ~/lib/log.sh
 
 # INTEGRATIONS
 source $ZDOTDIR/.zsh_angular

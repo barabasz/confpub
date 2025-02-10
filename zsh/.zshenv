@@ -24,6 +24,9 @@ export GHCONFDIR=$GHDIR/config
 export GHCONFPRIVDIR=$GHDIR/confpriv
 export CONFDIR=$XDG_CONFIG_HOME
 
+# FILES
+export ZFNFILE=$ZDOTDIR/.zsh_functions
+
 # PATH
 # user scripts and binaries
 export PATH=$BINDIR:$BINDIR/install:$BINDIR/test:$HOME/binos:/usr/local/bin:$PATH

@@ -14,14 +14,22 @@ export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-$HOME/.xdg}
 export XDG_PROJECTS_DIR=${XDG_PROJECTS_DIR:-$HOME/Projects}
 
 # DIRECTORIES
+## zsh
 export ZDOTDIR=$HOME/.config/zsh
-export BINDIR=$HOME/bin
-export HOMEDIR=$HOME
-export LIBDIR=$HOME/lib
+## Temp
+export TMP=$HOME/.tmp
+export TEMP=$TMP
+export TEMPDIR=$TMP
+export TMPDIR=$TMP
+## GitHub
 export GHDIR=$HOME/GitHub
 export GHBINDIR=$GHDIR/bin
 export GHCONFDIR=$GHDIR/config
 export GHCONFPRIVDIR=$GHDIR/confpriv
+## Other
+export BINDIR=$HOME/bin
+export HOMEDIR=$HOME
+export LIBDIR=$HOME/lib
 export CONFDIR=$XDG_CONFIG_HOME
 export DLDIR=$HOME/Downloads
 

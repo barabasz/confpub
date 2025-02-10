@@ -8,9 +8,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# INCLUDES
-[ -f ~/.bash_profile ] && source ~/.bash_profile
-
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
@@ -35,7 +32,7 @@ source $ZDOTDIR/.zsh_functions
 source $ZDOTDIR/.zsh_aliases
 
 # INTEGRATIONS
-source $ZDOTDIR/.zsh_angular
+# source $ZDOTDIR/.zsh_angular
 source $ZDOTDIR/.zsh_bat
 source $ZDOTDIR/.zsh_brew
 source $ZDOTDIR/.zsh_fzf

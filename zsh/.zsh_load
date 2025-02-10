@@ -1,0 +1,21 @@
+#!/bin/zsh
+
+# MODULES
+source $LIBDIR/ansi.sh
+source $LIBDIR/log.sh
+source $LIBDIR/colors.sh
+
+# FUNCTIONS
+source $ZDOTDIR/.zsh_functions
+
+# ALIASES
+source $ZDOTDIR/.zsh_aliases
+
+# INTEGRATIONS
+source $ZDOTDIR/.zsh_angular
+source $ZDOTDIR/.zsh_bat
+source $ZDOTDIR/.zsh_brew
+source $ZDOTDIR/.zsh_fzf
+source $ZDOTDIR/.zsh_iterm
+source $ZDOTDIR/.zsh_thefuck
+source $ZDOTDIR/.zsh_zoxide

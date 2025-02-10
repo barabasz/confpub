@@ -27,12 +27,15 @@ export CONFDIR=$XDG_CONFIG_HOME
 # user scripts and binaries
 export PATH=$BINDIR:$BINDIR/install:$BINDIR/test:$HOME/binos:/usr/local/bin:$PATH
 
-# Prompt fallback (will be override by p10k)
+# PROMPT fallback (will be override by p10k)
 export PS1="[\[\033[36m\]\u\[\033[37m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]]$ "
 
 # Preferred editor
 export EDITOR='nvim'
 export VISUAL='code'
+
+# VARIA
+export MYGH='https://raw.githubusercontent.com/barabasz'
 
 # Get the colors in the opened man page itself
 export MANPAGER="sh -c 'col -bx | bat -l man -p --paging always'"

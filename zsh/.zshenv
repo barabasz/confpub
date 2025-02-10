@@ -21,6 +21,7 @@ export LIBDIR=$HOME/lib
 export GHDIR=$HOME/GitHub
 export GHBINDIR=$GHDIR/bin
 export GHCONFDIR=$GHDIR/config
+export GHCONFPRIVDIR=$GHDIR/confpriv
 export CONFDIR=$XDG_CONFIG_HOME
 
 # PATH

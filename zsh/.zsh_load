@@ -1,5 +1,8 @@
 #!/bin/zsh
 
+# VARIABLES
+source ~/.zshenv
+
 # MODULES
 source $LIBDIR/ansi.sh
 source $LIBDIR/log.sh

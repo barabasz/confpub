@@ -37,11 +37,10 @@ function command_exists() {
 
 # Check if programm is installed
 function isinstalled() {
-    test=$(which $1 | grep -o "/$1")
-    if [[ "$test" == "/$1" ]]; then
-        echo 'yes'
-    else
+    if [[ $(utype $1) == 'file' || "$(which $1)" == /* ]]; then
         echo 'no'
+    else
+        echo 'yes'
     fi
 }
 
@@ -215,5 +214,52 @@ function makeconfln() {
         echo "symlink $CONFDIR/$1 → $GHCONFDIR/$1 created"
     fi
 }
+
+function dlunzip() {
+  if [ $# -ne 2 ]; then
+    echo "Usage: download_and_extract <url> <folder>"
+    return 1
+  fi
+
+  local url="$1"
+  local folder="$2"
+
+  if [ -z "$DLDIR" ]; then
+    echo "\$DLDIR is not set"
+    return 1
+  fi
+
+  # Create $DLDIR if it doesn't exist
+  mkdir -p "$DLDIR"
+
+  # Download the ZIP file to $DLDIR
+  local zip_file=$(basename "$url")
+  local temp_zip_file="$DLDIR/$zip_file"
+  curl -foL "$temp_zip_file" "$url"
+
+  # Check if the download was successful
+  if [ $? -ne 0 ]; then
+    echo "Failed to download $url"
+    return 1
+  fi
+
+  # Extract the ZIP file to the specified folder
+  unzip "$temp_zip_file" -d "$folder"
+
+  # Check if the extraction was successful
+  if [ $? -ne 0 ]; then
+    echo "Failed to extract $zip_file to $folder"
+    return 1
+  fi
+
+  # Delete the downloaded ZIP file
+  rm "$temp_zip_file"
+
+  echo "Downloaded and extracted $url to $folder"
+}
+
+# Example usage:
+# download_and_extract "https://example.com/file.zip" "/path/to/folder"
+
 
 export ZSH_FUNCTIONS_LOADED=true

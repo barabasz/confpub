@@ -23,6 +23,7 @@ export GHBINDIR=$GHDIR/bin
 export GHCONFDIR=$GHDIR/config
 export GHCONFPRIVDIR=$GHDIR/confpriv
 export CONFDIR=$XDG_CONFIG_HOME
+export DLDIR=$HOME/Downloads
 
 # FILES
 export ZFNFILE=$ZDOTDIR/.zsh_functions
@@ -32,7 +33,11 @@ export ZFNFILE=$ZDOTDIR/.zsh_functions
 export PATH=$BINDIR:$BINDIR/install:$BINDIR/test:$HOME/binos:/usr/local/bin:$PATH
 
 # PROMPT fallback (will be override by p10k)
-export PS1="[\[\033[36m\]\u\[\033[37m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]]$ "
+if [[ $(echo $0 | grep -o zsh) == 'zsh' ]]; then
+    export PS1="[%{%F{cyan}%}%n%{%f%}@%{%F{green}%}%m:%{%F{yellow}%}%~%{%f%}%]]$ "
+else
+    export PS1="[\[\033[36m\]\u\[\033[37m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]]$ "
+fi
 
 # Preferred editor
 export EDITOR='nvim'

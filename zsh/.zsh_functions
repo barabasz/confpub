@@ -56,6 +56,10 @@ function isinstalledbybrew() {
 
 # Remove target and create symlink
 function lnf() {
+    if [[ $# -lt 2 ]]; then
+        echo "Usage: lnf <source> <target>"
+        return 1
+    fi
     if [[ ! -r $1 ]]; then
         echo "$1 is not readable"
         return 1

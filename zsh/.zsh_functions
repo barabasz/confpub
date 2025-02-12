@@ -108,18 +108,6 @@ if [[ "$(osname)" == "ubuntu" ]]; then
     }
 fi
 
-# Print yellow header
-function printhead() {
-    output="\n${yellowb}"$*"${clear}\n"
-    printf "$output"
-}
-
-# Print green info
-function printinfo() {
-    output="${greenb}"$*"${clear}\n"
-    printf "$output"
-}
-
 # Search man with fzf
 function fman() {
     man -k . | fzf -q "$1" --prompt='man> '  --preview $'echo {} | tr -d \'()\' | awk \'{printf "%s ", $2} {print $1}\' | xargs -r man | col -bx | bat -l man -p --color always' | tr -d '()' | awk '{printf "%s ", $2} {print $1}' | xargs -r man
@@ -158,7 +146,7 @@ function utype() {
 # Example: verinfo gzip "GNU Zip" --version
 function verinfo() {
     if [[ -z "$1" ]]; then
-        echo -e "usage:$green verinf$clear cliname appname versioncommand"
+        echo -e "usage:$green verinf$reset cliname appname versioncommand"
         return 1
     elif [[ ! -z "$4" ]]; then
         echo -e "too many parameters"
@@ -180,24 +168,24 @@ function verinfo() {
     if [[ $type = 'file' || "$(which $cliname)" == /* ]]; then
         msg='is installed in'
         reg='\b[0-9]{1,}\.[0-9]{1,}(\.[0-9]{1,}){0,}\b'
-        app="${green}${appname}${clear}"
-        ver="$yellow$($cliname $vercmmd | grep -Eo $reg | head -1)$clear"
-        pth="$purple$(whereis -b $cliname | sed 's/.*: //')$clear"
+        app="${green}${appname}${reset}"
+        ver="$yellow$($cliname $vercmmd | grep -Eo $reg | head -1)$reset"
+        pth="$purple$(whereis -b $cliname | sed 's/.*: //')$reset"
         echo -e "$app $ver $msg $pth"
     fi
     if [[ $type = 'alias' ]]; then
         msg='is an alias for'
-        als="${green}$cliname${clear} $msg ${purple}$(alias $cliname | sed "s/.*=//")${clear}"
+        als="${green}$cliname${reset} $msg ${purple}$(alias $cliname | sed "s/.*=//")${reset}"
         echo -e "$als"
     fi
     if [[ $type = 'function' || $type = 'keyword' || $type = 'builtin' ]]; then
         msg='is a'
-        als="${green}$cliname${clear} $msg ${purple}$type${clear}"
+        als="${green}$cliname${reset} $msg ${purple}$type${reset}"
         echo -e "$als"
     fi    
     if [[ -z $type ]]; then
         msg="is not available"
-        echo -e "${red}$cliname${clear} $msg"
+        echo -e "${red}$cliname${reset} $msg"
         return 2
     fi
 }

@@ -24,6 +24,7 @@ source $ZDOTDIR/.zsh_locale
 source $LIBDIR/ansi.sh
 source $LIBDIR/log.sh
 source $LIBDIR/colors.sh
+source $LIBDIR/print.sh
 
 # FUNCTIONS
 source $ZDOTDIR/.zsh_functions

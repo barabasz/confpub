@@ -5,13 +5,7 @@ export HISTFILE=$ZDOTDIR/.zsh_history
 export HISTSIZE=1000
 export HISTFILESIZE=1000
 
-# XDG
-export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
-export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
-export XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
-export XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
-export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-$HOME/.xdg}
-export XDG_PROJECTS_DIR=${XDG_PROJECTS_DIR:-$HOME/Projects}
+
 
 # DIRECTORIES
 ## zsh
@@ -23,6 +17,7 @@ export TEMPDIR=$TMP
 export TMPDIR=$TMP
 ## GitHub
 export GHDIR=$HOME/GitHub
+hash -d git=$GHDIR
 export GHBINDIR=$GHDIR/bin
 export GHCONFDIR=$GHDIR/config
 export GHCONFPRIVDIR=$GHDIR/confpriv
@@ -30,8 +25,17 @@ export GHCONFPRIVDIR=$GHDIR/confpriv
 export BINDIR=$HOME/bin
 export HOMEDIR=$HOME
 export LIBDIR=$HOME/lib
-export CONFDIR=$XDG_CONFIG_HOME
+export CONFDIR=$HOME/.config
+hash -d config=$GHDIR
 export DLDIR=$HOME/Downloads
+
+# XDG
+export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$CONFDIR}
+export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
+export XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
+export XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
+export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-$HOME/.xdg}
+export XDG_PROJECTS_DIR=${XDG_PROJECTS_DIR:-$HOME/Projects}
 
 # FILES
 export ZFNFILE=$ZDOTDIR/.zsh_functions

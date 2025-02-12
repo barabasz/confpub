@@ -1,5 +1,9 @@
 #!/bin/zsh
 
+# Global
+
+alias -g G='| grep'
+
 # Common
 
 alias 7zip='7zz'

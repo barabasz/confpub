@@ -74,4 +74,4 @@ zstyle ':omz:update' frequency 1
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(copyfile copypath history sudo web-search zsh-autosuggestions zsh-syntax-highlighting macos)
 
-source $ZSH/oh-my-zsh.sh
+[[ -f $ZSH/oh-my-zsh.sh ]] && source $ZSH/oh-my-zsh.sh

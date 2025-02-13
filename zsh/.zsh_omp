@@ -2,4 +2,6 @@
 
 # Oh My Posh configuration
 
-eval "$(oh-my-posh init zsh)"
+if [[ "$(isinstalled oh-my-posh)" == "yes" ]]; then
+    eval "$(oh-my-posh init zsh)"
+fi

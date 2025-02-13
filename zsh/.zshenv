@@ -10,6 +10,7 @@ export HISTFILESIZE=1000
 export ZDOTDIR=$HOME/.config/zsh
 ## Temp
 export TMP=$HOME/.tmp
+[[ ! -d $TMP ]] && mkdir -p $TMP
 export TEMP=$TMP
 export TEMPDIR=$TMP
 export TMPDIR=$TMP
@@ -21,16 +22,23 @@ export GHCONFDIR=$GHDIR/config
 export GHCONFPRIVDIR=$GHDIR/confpriv
 ## Other
 export BINDIR=$HOME/bin
+[[ ! -d $BINDIR ]] && mkdir -p $BINDIR
 hash -d bin=$BINDIR
 export HOMEDIR=$HOME
 export LIBDIR=$HOME/lib
 export CONFDIR=$HOME/.config
 hash -d config=$CONFDIR
 export DLDIR=$HOME/Downloads
+export CACHEDIR=$HOME/.cache
+[[ ! -d $CACHEDIR ]] && mkdir -p $CACHEDIR
+
+# ZSH
+export SHELL_SESSION_DIR="$CACHEDIR/.zsh_sessions"
+[[ ! -d $SHELL_SESSION_DIR ]] && mkdir -p $SHELL_SESSION_DIR
 
 # XDG
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$CONFDIR}
-export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
+export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$CACHEDIR}
 export XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
 export XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
 export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-$HOME/.xdg}

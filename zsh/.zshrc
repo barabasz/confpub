@@ -24,3 +24,8 @@ source $ZDOTDIR/.zsh_fzf
 source $ZDOTDIR/.zsh_iterm
 source $ZDOTDIR/.zsh_thefuck
 source $ZDOTDIR/.zsh_zoxide
+
+# Clean up
+# https://bit.ly/zsh_sessions
+[[ -d $ZDOTDIR/.zsh_sessions ]] && rm -rf $ZDOTDIR/.zsh_sessions/*
+[[ -d $ZDOTDIR/.zsh_sessions ]] && rmdir $ZDOTDIR/.zsh_sessions

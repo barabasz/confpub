@@ -18,6 +18,7 @@ alias js='node'
 alias ls='eza --group-directories-first --icons'
 alias mc='mc --nosubshell'
 alias myip='curl icanhazip.com' # Show public IP
+alias omp='oh-my-posh'
 alias pip='pip3'
 alias pipi='pip install'
 alias pipu='pip uninstall'

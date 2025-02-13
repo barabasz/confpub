@@ -5,8 +5,6 @@ export HISTFILE=$ZDOTDIR/.zsh_history
 export HISTSIZE=1000
 export HISTFILESIZE=1000
 
-
-
 # DIRECTORIES
 ## zsh
 export ZDOTDIR=$HOME/.config/zsh
@@ -23,10 +21,11 @@ export GHCONFDIR=$GHDIR/config
 export GHCONFPRIVDIR=$GHDIR/confpriv
 ## Other
 export BINDIR=$HOME/bin
+hash -d bin=$BINDIR
 export HOMEDIR=$HOME
 export LIBDIR=$HOME/lib
 export CONFDIR=$HOME/.config
-hash -d config=$GHDIR
+hash -d config=$CONFDIR
 export DLDIR=$HOME/Downloads
 
 # XDG
@@ -42,9 +41,9 @@ export ZFNFILE=$ZDOTDIR/.zsh_functions
 
 # PATH
 # user scripts and binaries
-export PATH=$BINDIR:$BINDIR/install:$BINDIR/test:$HOME/binos:/usr/local/bin:$PATH
+export PATH=$BINDIR:$BINDIR/common:$BINDIR/install:$BINDIR/test:$BINDIR/thisos:/usr/local/bin:$HOME/.local/bin:$PATH
 
-# PROMPT fallback (will be override by p10k)
+# PROMPT fallback (will be override by oh-my-posh)
 if [[ $(echo $0 | grep -o zsh) == 'zsh' ]]; then
     export PS1="[%{%F{cyan}%}%n%{%f%}@%{%F{green}%}%m:%{%F{yellow}%}%~%{%f%}%]]$ "
 else

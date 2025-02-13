@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+# Oh My Posh configuration
+
+eval "$(oh-my-posh init zsh)"

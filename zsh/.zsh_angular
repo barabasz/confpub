@@ -2,6 +2,6 @@
 
 # Load Angular CLI autocompletion
 
-if [[ "$(isinstalled ng)" == "yes" ]]; then
+if [[ $(isinstalled ng) ]]; then
   source <(ng completion script)
 fi

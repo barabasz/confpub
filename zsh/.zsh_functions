@@ -2,7 +2,7 @@
 
 # apt unattended quiet install
 function aptinstall() {
-    if [[ "$(isinstalled needrestart)" == "yes" ]]; then
+    if [[ $(isinstalled needrestart) ]]; then
         needrestart-quiet
     fi
     export NEEDRESTART_MODE=a 
@@ -11,7 +11,7 @@ function aptinstall() {
     grpopt='-Eiv'
     filter='^needrestart|^update|^reading|^building|^scanning|^\(|^\s*$'
     sudo apt-get install $aptopt $@ | grep $grpopt $filter
-    if [[ "$(isinstalled needrestart)" == "yes" ]]; then
+    if [[ $(isinstalled needrestart) ]]; then
         needrestart-verbose
     fi
 }
@@ -38,9 +38,9 @@ function command_exists() {
 # Check if programm is installed
 function isinstalled() {
     if [[ $(utype $1) == 'file' || "$(which $1)" == /* ]]; then
-        echo 'yes'
+        echo 1
     else
-        echo 'no'
+        echo 0
     fi
 }
 

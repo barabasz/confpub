@@ -6,58 +6,112 @@ alias -g G='| grep'
 
 # Common
 
-alias 7zip='7zz'
-alias bat='bat -n'
-alias cat='bat'
-alias cal='cal -m3'
-alias cd='z'
-alias cd..='z ..'
-alias dir='nnn -deH'
-alias imagemagick='magick'
-alias js='node'
-alias ls='eza --group-directories-first --icons'
-alias mc='mc --nosubshell'
-alias myip='curl icanhazip.com' # Show public IP
-alias omp='oh-my-posh'
-alias pip='pip3'
-alias pipi='pip install'
-alias pipu='pip uninstall'
-alias pipf='pip freeze'
-alias python='python3'
 alias reload="source $ZDOTDIR/.zshrc && omz reload"
-alias rp='rp -i'
-alias shopt='/usr/bin/shopt'
-alias ts='npx tsx'
-alias tree='eza --tree'
-alias tree2='eza --tree --level=2'
-alias tree3='eza --tree --level=3'
-alias vi='nvim'
-alias view='nvim -R'
-alias vim='nvim'
-alias vsc='code'
-alias neovim='nvim'
-alias vimdiff='nvim -d'
-alias youtube-dl='yt-dlp'
-alias ytdl='yt-dlp'
-alias zz='z -'
+alias myip='curl icanhazip.com' # Show public IP
 
-# Git
+# Applications
 
-alias gaa='git add --all'
-alias gcm='git commit -m "update"'
-alias glog='git log --oneline -n 10'
-alias gpu='git add --all && git commit -m "update" && git push'
-alias grb='git pull --rebase'
-alias gup='git pull --rebase'
-alias gsb='git status -sb'
-alias gst='git status -s'
-
-# MacOS
-
-if [[ "$(osname)" == "macos" ]]; then
-    alias cal='/opt/homebrew/opt/util-linux/bin/cal -m3'
+## 7zz
+if [[ $(isinstalled 7zz) ]]; then
+    alias 7z='7zz'
 fi
 
-if [[ "$(isinstalled gsed)" == "yes" ]]; then
+## bat
+if [[ $(isinstalled bat) ]]; then
+    alias bat='bat -n'
+    alias cat='bat'
+fi
+
+## cal
+if [[ $(isinstalled cal) ]]; then
+    alias cal='cal -m3'
+fi
+
+## code
+if [[ $(isinstalled code) ]]; then
+    alias vsc='code'
+fi
+
+## exa
+if [[ $(isinstalled eza) ]]; then
+    alias eza='eza --icons'
+    alias exa='eza'
+    alias ls='eza --group-directories-first'
+    alias ll='eza --long --group-directories-first'
+    alias tree='eza --tree'
+    alias tree2='eza --tree --level=2'
+    alias tree3='eza --tree --level=3'
+fi
+
+## git
+if [[ $(isinstalled git) ]]; then    
+    alias gaa='git add --all'
+    alias gcm='git commit -m "update"'
+    alias glog='git log --oneline -n 10'
+    alias gpu='git add --all && git commit -m "update" && git push'
+    alias grb='git pull --rebase'
+    alias gup='git pull --rebase'
+    alias gsb='git status -sb'
+    alias gst='git status -s'
+fi
+
+## gsed
+if [[ $(isinstalled gsed) ]]; then
     alias sed='gsed'
+fi
+
+## mc
+if [[ $(isinstalled mc) ]]; then
+    alias mc='mc --nosubshell'
+fi
+
+## nivm
+if [[ $(isinstalled git) ]]; then 
+    alias vi='nvim'
+    alias view='nvim -R'
+    alias vim='nvim'
+    alias neovim='nvim'
+    alias vimdiff='nvim -d'
+fi
+
+## node
+if [[ $(isinstalled node) ]]; then
+    alias js='node'
+fi
+
+## npx
+if [[ $(isinstalled npx) ]]; then
+    alias ts='npx tsx'
+fi
+
+## pip3
+if [[ $(isinstalled pip3) ]]; then 
+    alias pip='pip3'
+    alias pipi='pip install'
+    alias pipu='pip uninstall'
+    alias pipf='pip freeze'
+fi
+
+## oh-my-posh
+if [[ $(isinstalled oh-my-posh) ]]; then
+    alias omp='oh-my-posh'
+fi
+
+## python
+if [[ $(isinstalled python3) ]]; then 
+    alias python='python3'
+    alias py='python3'
+fi
+
+## yt-dlp
+if [[ $(isinstalled yt-dlp) ]]; then
+    alias youtube-dl='yt-dlp'
+    alias ytdl='yt-dlp'
+fi
+
+## z (zoxide)
+if [[ $(isinstalled zoxide) ]]; then
+    alias cd='z'
+    alias cd..='z ..'
+    alias zz='z -'
 fi

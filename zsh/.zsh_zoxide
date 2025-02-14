@@ -2,6 +2,6 @@
 
 # zoxide shell integration
 
-if [[ "$(isinstalled zoxide)" == "yes" ]]; then
+if [[ $(isinstalled zoxide) ]]; then
   eval "$(zoxide init zsh)"
 fi

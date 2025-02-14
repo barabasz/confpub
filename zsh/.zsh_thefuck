@@ -2,6 +2,6 @@
 
 # The Fuck helper
 
-if [[ "$(isinstalled thefuck)" == "yes" ]]; then
+if [[ $(isinstalled thefuck) ]]; then
   eval $(thefuck --alias)
 fi

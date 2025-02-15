@@ -4,6 +4,9 @@
 local thispath="${(%):-%x}"
 zsh_files+=($thispath)
 
-[[ $(isinstalled loginfiles) ]] && loginfiles
-[[ $(isinstalled logininfo) ]] && logininfo
-printf "\n"
+if [[ ${ZSH_FUNCTIONS_LOADED} ]]; then
+    sysinfo
+    loginfiles
+    logininfo
+    printf "\n"
+fi

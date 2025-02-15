@@ -78,7 +78,7 @@ function isinstalledbybrew() {
 
 # Remove target and create symlink
 function lnf() {
-    if [[ $# -lt 2 ]]; then
+    if [[ ! $# -eq 2 ]]; then
         echo "Usage: lnf <source> <target>"
         return 1
     fi
@@ -324,6 +324,31 @@ function update() {
         brew upgrade
         brew cleanup
     fi
+}
+
+function sysinfo() {
+    local kernel=$(uname -r)
+    local uptime=$(uptime | awk '{print $3,$4}' | sed 's/,//')
+    echo "System information..."
+}
+
+# oh-my-zsh functions
+
+function isomzinstalled() {
+    if [[ -d $ZSH ]] && [[ $(omz version | grep -o 'master' | head -1) = 'master' ]];
+    then echo 1; else echo 0; fi
+}
+
+function installomzplugin() {
+    local repo=https://github.com/zsh-users/$1.git
+    local pdir=$ZSH_CUSTOM/plugins/$1
+    printhead "Installing $1"
+    [[ -d $pdir ]] && rm -rf $pdir
+    git clone $repo $pdir
+}
+
+function omzversion() {
+    printf "${green}oh-my-zsh ${yellow}$(omz version)$reset is installed in ${purple}$ZSH${reset}\n"
 }
 
 export ZSH_FUNCTIONS_LOADED=true

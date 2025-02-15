@@ -5,6 +5,7 @@
 # Path to your Oh My Zsh installation.
 export ZSH="$CONFDIR/omz"
 export ZSH_COMPDUMP=$CACHEDIR/.zcompdump-$HOST
+export ZSH_CUSTOM=$ZSH/custom
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,

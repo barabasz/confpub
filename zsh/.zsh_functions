@@ -1,5 +1,9 @@
 #!/bin/zsh
 
+# track loaded files
+local thispath="${(%):-%x}"
+zsh_files+=($thispath)
+
 # apt unattended quiet install
 function aptinstall() {
     if [[ $(isinstalled needrestart) ]]; then
@@ -13,6 +17,24 @@ function aptinstall() {
     sudo apt-get install $aptopt $@ | grep $grpopt $filter
     if [[ $(isinstalled needrestart) ]]; then
         needrestart-verbose
+    fi
+}
+
+# Source file if exists
+function sourceif() {
+    [[ $# -eq 0 ]] && echo "Usage: sourceif <file> [error message]" && return 1
+    if [[ $# -eq 1 ]]; then
+        script="${redi}sourceif error${reset}"
+    else
+        script="${redi}sourceif error${reset} in ${yellow}$2${reset}"
+    fi
+
+    if [[ -f $1 ]]; then
+        source $1
+    else
+        [[ $# -ge 2 ]] && printf "$1 not found\n" || printf "$2: $1 not found\n"
+        printf "$script: ${cyan}$1${reset} not found\n"
+        return 1
     fi
 }
 
@@ -241,6 +263,67 @@ function dlunzip() {
     rm $tempfile
 
     echo $extdir
+}
+
+function loginfiles() {
+    printf "Login files: "
+    if [[ -z $zsh_files ]]; then
+        printf "${redi}error${reset}: zsh_files not found"
+        return
+    else
+        i=1; l=${#zsh_files[@]}
+        for file in $zsh_files; do
+            f=$(basename $file)
+            printf "${cyan}${f#.}${reset}"
+            [[ i -lt l ]] && printf " ${yellow}→${reset} "
+            ((i++))
+        done
+    fi
+    printf "\n"
+}
+
+function logininfo() {
+    local user=$(whoami)
+    local userc=$yellow$user$reset
+    local host=$(hostname -s)
+    local domain=$(hostname -d)
+    [[ -n $domain ]] && host="$host.$domain"
+    local hostc=$cyan$host$reset
+    local tty=$(tty | sed 's|/dev/||')
+    local ttyc="$green$tty$reset"
+    local remote=$(who | grep $tty | grep -oE '\([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\)' | tr -d '()')
+    [[ -n $remote ]] && local remotec="from $cyan$remote$reset"
+    if [[ $(isinstalled ifconfig) ]]; then
+        local ip=$green$(ifconfig | awk '/inet / && !/127.0.0.1/ {print $2}')$reset
+    else
+        local ip=$(ip addr show | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | cut -d'/' -f1)
+    fi
+    local ipc=$green$ip$reset
+    printf "Logged in as $userc@$hostc ($ipc) on $ttyc $remotec\n"
+}
+
+function update() {
+    if [[ ! "$(osname)" == "macos" ]]; then
+        envopt="NEEDRESTART_MODE=a DEBIAN_FRONTEND=noninteractive"
+        aptopt="-qq"
+        filter1='^Hit|^Get'
+        filter2='^NEEDRESTART|^update|Reading'
+
+        sudo apt-get update | grep -Ev $filter1
+        sudo $envopt apt-get $aptopt upgrade | grep -Ev $filter2
+        sudo $envopt apt-get $aptopt dist-upgrade
+
+        sudo apt-get $aptopt clean
+        sudo apt-get $aptopt autoclean
+        sudo apt-get $aptopt autoremove
+        sudo sync
+    fi
+
+    if [[ $(isinstalled brew) ]]; then
+        brew update --auto-update
+        brew upgrade
+        brew cleanup
+    fi
 }
 
 export ZSH_FUNCTIONS_LOADED=true

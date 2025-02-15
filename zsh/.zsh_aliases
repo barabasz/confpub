@@ -1,5 +1,9 @@
 #!/bin/zsh
 
+# track loaded files
+local thispath="${(%):-%x}"
+zsh_files+=($thispath)
+
 # Global
 
 alias -g G='| grep'
@@ -37,7 +41,8 @@ if [[ $(isinstalled eza) ]]; then
     alias eza='eza --icons'
     alias exa='eza'
     alias ls='eza --group-directories-first'
-    alias ll='eza --long --group-directories-first'
+    alias ll='ls --long'
+    alias la='ll --all'
     alias tree='eza --tree'
     alias tree2='eza --tree --level=2'
     alias tree3='eza --tree --level=3'

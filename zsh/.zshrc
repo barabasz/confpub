@@ -1,5 +1,9 @@
 #!/bin/zsh
 
+# track loaded files
+local thispath="${(%):-%x}"
+zsh_files+=($thispath)
+
 # LOCALE
 source $ZDOTDIR/.zsh_locale
 
@@ -13,17 +17,17 @@ source $LIBDIR/print.sh
 source $ZDOTDIR/.zsh_functions
 
 # ALIASES
-source $ZDOTDIR/.zsh_aliases
+sourceif $ZDOTDIR/.zsh_aliases $thisfile
 
 # INTEGRATIONS
-source $ZDOTDIR/.zsh_omz     # oh-my-zsh
-source $ZDOTDIR/.zsh_omp     # oh-my-posh
-source $ZDOTDIR/.zsh_bat
-source $ZDOTDIR/.zsh_brew
-source $ZDOTDIR/.zsh_fzf
-source $ZDOTDIR/.zsh_iterm
-source $ZDOTDIR/.zsh_thefuck
-source $ZDOTDIR/.zsh_zoxide
+sourceif $ZDOTDIR/.zsh_omz $thisfile
+sourceif $ZDOTDIR/.zsh_omp $thisfile
+sourceif $ZDOTDIR/.zsh_bat $thisfile
+sourceif $ZDOTDIR/.zsh_brew $thisfile
+sourceif $ZDOTDIR/.zsh_fzf $thisfile
+sourceif $ZDOTDIR/.zsh_iterm $thisfile
+sourceif $ZDOTDIR/.zsh_thefuck $thisfile
+sourceif $ZDOTDIR/.zsh_zoxide $thisfile
 
 # Clean up
 # https://bit.ly/zsh_sessions

@@ -44,7 +44,7 @@ function extsource() {
     source /dev/stdin <<< "$(curl -fsSL $1)"
 }
 
-# Get SHELL name
+# Get shell name
 function get_shell() {
     echo $SHELL | xargs basename
 }

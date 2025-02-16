@@ -1,8 +1,8 @@
 #!/bin/zsh
 
 # track loaded files
-local thispath="${(%):-%x}"
-zsh_files+=($thispath)
+# local thispath="${(%):-%x}"
+zsh_files+=("zsh_functions")
 
 # apt unattended quiet install
 function aptinstall() {
@@ -101,21 +101,24 @@ function mdcd() {
 
 # Display OS name
 function osname() {
-    if [[ -f /etc/os-release ]]; then
-        osid=$(cat /etc/os-release | grep "^ID=")
-        osname=${osid:3}
-    elif [[ -d /System/iOSSupport ]]; then
-        osname='macos'
+    local ostype=$(uname -s | tr '[:upper:]' '[:lower:]')
+    if [[ $ostype == 'darwin' ]]; then
+        printf "macos"
+    elif [[ $ostype == 'linux' ]]; then
+        if [[ -f /etc/os-release ]]; then
+            # awk -F= '/^ID=/{print $2}' /etc/os-release
+            local id=$(cat /etc/os-release | grep "^ID=")
+            printf "${id#*=}"
+        fi
     else
-        osname='unknown'
+        printf "unknown"
     fi
-    osname=$(echo $osname | awk '{print tolower($0)}' | awk '{ gsub(/ /,""); print }')
-    printf $osname
 }
+
 
 # modify /etc/needrestart/needrestart.conf
 # use: needrestart-mod parameter value
-if [[ "$(osname)" == "ubuntu" ]]; then
+if [[ "$(osname)" != "macos" ]]; then
     function needrestart-mod() {
         filename=/etc/needrestart/needrestart.conf
         sudo sed -i "s/^#\?\s\?\$nrconf{$1}.*/\$nrconf{$1} = $2;/" $filename
@@ -139,15 +142,49 @@ function fman() {
     man -k . | fzf -q "$1" --prompt='man> '  --preview $'echo {} | tr -d \'()\' | awk \'{printf "%s ", $2} {print $1}\' | xargs -r man | col -bx | bat -l man -p --color always' | tr -d '()' | awk '{printf "%s ", $2} {print $1}' | xargs -r man
 }
 
-# Universal type command for Ubuntu and MacOS
+# Get shell name
+function shellname() {
+    case "$(ps -p $$ -o comm=)" in
+        *zsh)
+            echo "zsh"
+            ;;
+        *bash)
+            echo "bash"
+            ;;
+        *)
+            echo "unknown"
+            ;;
+    esac
+}
+
+# Extract version number from string
+function getver() {
+  echo "$1" | grep -oE '[0-9]+(\.[0-9]+)*' | head -1
+}
+
+# Get shell version
+function shellver() {
+    if [[ $(shellname) == 'zsh' ]]; then
+        local version=$(zsh --version)
+    elif [[ $(shellname) == 'bash' ]]; then
+        local version=$(bash --version)
+        version="${version#*version }"
+    else
+        echo "extractver: unknown shell"
+        return 1
+    fi
+    echo $(getver $version)
+}
+
+# Universal type command for bash and zsh
 function utype() {
     if [[ -z $1 ]]; then
-        echo 'cmdtype: no command specified'
+        echo 'utype: no command specified'
         return 1
     else
-        if [[ $(osname) == 'ubuntu' ]]; then
+        if [[ $(shellname) == 'bash' ]]; then
             output=$(type -t $1)
-        elif [[ $(osname) == 'macos' ]]; then
+        elif [[ $(shellname) == 'zsh' ]]; then
             tp=$(type $1)
             if [[ $(echo $tp | \grep -o 'is /') ]]; then
                 output='file'
@@ -161,7 +198,7 @@ function utype() {
                 output='builtin'
             fi
         else
-            echo 'cmdtype: unsupported os'
+            echo 'cmdtype: unsupported shell'
             return 1
         fi
     fi
@@ -302,7 +339,7 @@ function logininfo() {
     printf "Logged in as $userc@$hostc ($ipc) on $ttyc $remotec\n"
 }
 
-function update() {
+function sysupdate() {
     if [[ ! "$(osname)" == "macos" ]]; then
         envopt="NEEDRESTART_MODE=a DEBIAN_FRONTEND=noninteractive"
         aptopt="-qq"
@@ -326,10 +363,49 @@ function update() {
     fi
 }
 
+# Calculate uptime in hours
+function uptimeh() {
+    if [[ $(osname) == "macos" ]]; then
+        boot_timestamp=$(sysctl -n kern.boottime | awk '{print $4}' | tr -d ',')
+        current_timestamp=$(date +%s)
+        uptime_seconds=$((current_timestamp - boot_timestamp))
+        printf "%.2f\n" $(echo "$uptime_seconds / 3600" | bc -l)
+    else
+        printf $(awk '{printf "%.2f\n", $1/3600}' /proc/uptime)
+    fi
+}
+
+function macosname() {
+    local version=$(sw_vers -productVersion)
+    local major=$(echo $version | cut -d. -f1)
+    case $major in
+        15) printf "Seqouia" ;;
+        14) printf "Sonoma" ;;
+        13) printf "Ventura" ;;
+        12) printf "Monterey" ;;
+        11) printf "Big Sur" ;;
+        *)  printf "Unknown" ;;
+    esac
+}
+
+# Display system info
 function sysinfo() {
-    local kernel=$(uname -r)
-    local uptime=$(uptime | awk '{print $3,$4}' | sed 's/,//')
-    echo "System information..."
+    local os_kernel=$(uname -r)
+    local os_shell=$(shellname)
+    local os_shell_ver=$(shellver)
+    local os_arch=$(uname -m)
+    local os_uptime=$(uptimeh)
+
+    if [[ $(osname) == "macos" ]]; then
+        local os_name="macOS"
+        local os_version=$(sw_vers -productVersion)
+        local os_codename=$(macosname)
+    else
+        local os_name=$(awk -F= '/^NAME=/{gsub(/^"|"$/, "", $2); print $2}' /etc/os-release)
+        local os_version=$(awk -F= '/^VERSION_ID=/{gsub(/^"|"$/, "", $2); print $2}' /etc/os-release)
+        local os_codename=$(awk -F= '/^VERSION_CODENAME=/{gsub(/^"|"$/, "", $2); print $2}' /etc/os-release)
+    fi
+    printf "This is ${yellowi}$os_name${reset} $os_version (${(C)os_codename}) with ${yellow}$os_shell${reset} $os_shell_ver running on ${yellow}$os_arch${reset} for $os_uptime hrs\n"
 }
 
 # oh-my-zsh functions
@@ -349,6 +425,24 @@ function installomzplugin() {
 
 function omzversion() {
     printf "${green}oh-my-zsh ${yellow}$(omz version)$reset is installed in ${purple}$ZSH${reset}\n"
+}
+
+function minimize-login-info() {
+    if [[ "$(osname)" == "ubuntu" ]]; then
+        sudo chmod -x /etc/update-motd.d/00-header
+        sudo chmod -x /etc/update-motd.d/10-help-text
+        sudo chmod -x /etc/update-motd.d/50-motd-news
+        #sudo chmod -x /etc/update-motd.d/90-updates-available
+        sudo chmod -x /etc/update-motd.d/91-contract-ua-esm-status
+    elif [[ "$(osname)" == "debian" ]]; then
+        #sudo chmod -x /etc/update-motd.d/10-uname
+        sudo cp /etc/motd /etc/motd.org
+        sudo rm -f /etc/motd
+        sudo touch /etc/motd
+    fi
+    if [[ ! "$(osname)" == "macos" ]]; then
+        sudo ln -sf ~/GitHub/config/motd/05-header /etc/update-motd.d
+    fi
 }
 
 export ZSH_FUNCTIONS_LOADED=true

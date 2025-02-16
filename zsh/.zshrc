@@ -1,8 +1,8 @@
 #!/bin/zsh
 
 # track loaded files
-local thispath="${(%):-%x}"
-zsh_files+=($thispath)
+# local thispath="${(%):-%x}"
+zsh_files+=("zshrc")
 
 # LOCALE
 source $ZDOTDIR/.zsh_locale

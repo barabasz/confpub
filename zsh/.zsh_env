@@ -24,6 +24,10 @@ hash -d git=$GHDIR
 export GHBINDIR=$GHDIR/bin
 export GHCONFDIR=$GHDIR/config
 export GHCONFPRIVDIR=$GHDIR/confpriv
+### SSH
+export SSH_HOME=~/.config/ssh
+[[ ! -d $SSH_HOME ]] && mkdir -p $SSH_HOME
+export SSH_AUTH_SOCK="$SSH_HOME/ssh_auth.sock"
 ## Other
 export BINDIR=$HOME/bin
 [[ ! -d $BINDIR ]] && mkdir -p $BINDIR
@@ -39,6 +43,7 @@ export CACHEDIR=$HOME/.cache
 # ZSH
 export SHELL_SESSION_DIR="$CACHEDIR/.zsh_sessions"
 [[ ! -d $SHELL_SESSION_DIR ]] && mkdir -p $SHELL_SESSION_DIR
+export ZSH_LOAD_FILE=$ZDOTDIR/.zsh_load
 
 # XDG
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$CONFDIR}

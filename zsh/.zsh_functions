@@ -6,18 +6,14 @@ zsh_files+=("zsh_functions")
 
 # apt unattended quiet install
 function aptinstall() {
-    if [[ $(isinstalled needrestart) -eq 1 ]]; then
-        needrestart-quiet
-    fi
+    [[ $(isinstalled needrestart) -eq 1 ]] && needrestart-quiet
     export NEEDRESTART_MODE=a 
     export DEBIAN_FRONTEND=noninteractive
     aptopt='-qq'
     grpopt='-Eiv'
     filter='^needrestart|^update|^reading|^building|^scanning|^\(|^\s*$'
     sudo apt-get install $aptopt $@ | grep $grpopt $filter
-    if [[ $(isinstalled needrestart) -eq 1 ]]; then
-        needrestart-verbose
-    fi
+    [[ $(isinstalled needrestart) -eq 1 ]] && needrestart-verbose
 }
 
 # Source file if exists
@@ -59,7 +55,7 @@ function command_exists() {
 
 # Check if programm is installed
 function isinstalled() {
-    if [[ $(utype $1) == 'file' || "$(which $1)" == /* ]]; then
+    if [[ $(utype $1) == 'file' || "$(uwhich $1)" == /* ]]; then
         echo 1
     else
         echo 0
@@ -115,7 +111,6 @@ function osname() {
     fi
 }
 
-
 # modify /etc/needrestart/needrestart.conf
 # use: needrestart-mod parameter value
 if [[ "$(osname)" != "macos" ]]; then
@@ -142,21 +137,6 @@ function fman() {
     man -k . | fzf -q "$1" --prompt='man> '  --preview $'echo {} | tr -d \'()\' | awk \'{printf "%s ", $2} {print $1}\' | xargs -r man | col -bx | bat -l man -p --color always' | tr -d '()' | awk '{printf "%s ", $2} {print $1}' | xargs -r man
 }
 
-# Get shell name
-function shellname() {
-    case "$(ps -p $$ -o comm=)" in
-        *zsh)
-            echo "zsh"
-            ;;
-        *bash)
-            echo "bash"
-            ;;
-        *)
-            echo "unknown"
-            ;;
-    esac
-}
-
 # Extract version number from string
 function getver() {
   echo "$1" | grep -oE '[0-9]+(\.[0-9]+)*' | head -1
@@ -176,65 +156,192 @@ function shellver() {
     echo $(getver $version)
 }
 
-# Universal type command for bash and zsh
-function utype() {
-    if [[ -z $1 ]]; then
-        echo 'utype: no command specified'
+# Get shell name
+function shellname() {
+    case "$(ps -p $$ -o comm=)" in
+        *zsh)
+            echo "zsh"
+            ;;
+        *bash)
+            echo "bash"
+            ;;
+        *)
+            echo "unknown"
+            ;;
+    esac
+}
+
+# Information about function parameters
+function params() {
+    echo "Number of parameters: $#"
+    echo "Parameters: $@"
+    echo "First parameter: $1"
+    echo "Second parameter: $2"
+    echo "Last parameter: ${@: -1}"
+}
+
+# Check number of parameters
+function checkargs() {
+    if [[ $# -ne 3 ]]; then
+        printf "${redi}checkargs error${reset}: not enough arguments (expected 3, given $#)\n"
+        printf "checkargs usage: ${yellow}checkargs${reset} ${green}<min> <max> <actual>${reset}\n"
         return 1
-    else
-        if [[ $(shellname) == 'bash' ]]; then
-            output=$(type -t $1)
-        elif [[ $(shellname) == 'zsh' ]]; then
-            tp=$(type $1)
-            if [[ $(echo $tp | \grep -o 'is /') ]]; then
-                output='file'
-            elif [[ $(echo $tp | \grep -o 'alias') ]]; then
-                output='alias'
-            elif [[ $(echo $tp | \grep -o 'shell function') ]]; then
-                output='function'
-            elif [[ $(echo $tp | \grep -o 'reserved') ]]; then
-                output='keyword'
-            elif [[ $(echo $tp | \grep -o 'builtin') ]]; then
-                output='builtin'
-            fi
+    fi
+
+    local min=$1
+    local max=$2
+    local given=$3
+    local msg1=""; local msg2=""
+
+    if [[ $min -gt $max ]]; then
+        echo "checkargs: min number of arguments cannot be greater than max"
+        return 1
+    elif [[ $given -lt 0 ]]; then
+        echo "checkargs: actual number of arguments cannot be negative"
+        return 1
+    fi
+
+    if [[ $given -eq 0 ]]; then
+        msg1="no arguments given"
+    elif [[ $given -lt $min ]]; then
+        msg1="not enough arguments"
+    elif [[ $given -gt $max ]]; then
+        msg1="too many arguments"
+    fi
+
+    if [[ $given -lt $min || $given -gt $max ]]; then
+        if [[ $1 == $2 ]]; then
+            msg2="expected $min"
         else
-            echo 'cmdtype: unsupported shell'
+            msg2="expected $min to $max"
+        fi
+        echo "$msg1 ($msg2, given $given)"
+        return 1
+    fi
+
+    echo "ok"
+    return 0
+}
+
+# Usage message for functions
+function usage() {
+    local fname=$1
+    local fargs=$2
+    printf "$1 usage: ${yellow}$1${reset} ${green}$2${reset}\n"
+}
+
+# Universal better type command for bash and zsh
+# returns: 'file', 'alias', 'function', 'keyword', 'builtin' or 'not found'
+function utype() {
+    # function properties
+    local fargs="<command>"
+    local minargs=0
+    local maxargs=1
+    # argument check
+    local thisf="${funcstack[1]}"
+    local error="${redi}$thisf error:${reset}"
+    local usage=$(usage $thisf $fargs)
+    [[ $# -eq 0 ]] && printf "$usage\n" && return 1
+    local args=$(checkargs $minargs $maxargs $#)
+    [[ $args != "ok" ]] && printf "$error $args\n$usage\n" && return 1
+
+    if [[ $(shellname) == 'bash' ]]; then
+        output=$(type -t $1)
+        if [[ -z $output ]]; then
+            echo "not found"
             return 1
         fi
+    elif [[ $(shellname) == 'zsh' ]]; then
+        tp=$(type $1)
+        if [[ $(echo $tp | \grep -o 'not found') ]]; then
+            echo "not found"
+            return 1
+        elif [[ $(echo $tp | \grep -o 'is /') ]]; then
+            output='file'
+        elif [[ $(echo $tp | \grep -o 'alias') ]]; then
+            output='alias'
+        elif [[ $(echo $tp | \grep -o 'shell function') ]]; then
+            output='function'
+        elif [[ $(echo $tp | \grep -o 'reserved') ]]; then
+            output='keyword'
+        elif [[ $(echo $tp | \grep -o 'builtin') ]]; then
+            output='builtin'
+        fi
+    else
+        echo "utype: unsupported shell"
+        return 1
     fi
+
     echo $output
+}
+
+# Universal better which command for bash and zsh
+function uwhich() {
+    # function properties
+    local fargs="<command>"
+    local minargs=0
+    local maxargs=1
+    # argument check
+    local thisf="${funcstack[1]}"
+    local error="${redi}$thisf error:${reset}"
+    local usage=$(usage $thisf $fargs)
+    [[ $# -eq 0 ]] && printf "$usage\n" && return 1
+    local args=$(checkargs $minargs $maxargs $#)
+    [[ $args != "ok" ]] && printf "$error $args\n$usage\n" && return 1
+
+    local type=$(utype $1)
+    if [[ $type == "file" ]]; then
+        echo $(which $1)
+    elif [[ $type == "alias" ]]; then
+        if [[ $(shellname) = "zsh" ]]; then
+            echo $(whence -p $1)
+        else
+            echo $(which $1)
+        fi
+    elif [[ $type == "not found" ]]; then
+        echo "${yellow}$1${reset} $type"
+        return 1
+    else
+        echo "${yellow}$1${reset} is a ${green}$type${reset}"
+        return 1
+    fi
 }
 
 # Short version info, usage: verinfo cliname appname versioncommand
 # Example: verinfo gzip "GNU Zip" --version
 function verinfo() {
-    if [[ -z "$1" ]]; then
-        echo -e "usage:$green verinf$reset cliname appname versioncommand"
-        return 1
-    elif [[ ! -z "$4" ]]; then
-        echo -e "too many parameters"
-        return 1
-    elif [[ -z "$2" ]]; then
-        cliname=$1
-        appname=$1
-        vercmmd="--version"
+    # function properties
+    local fargs="<cliname> [appname] [versioncommand]"
+    local minargs=0
+    local maxargs=3
+    # argument check
+    local thisf="${funcstack[1]}"
+    local error="${redi}$thisf error:${reset}"
+    local usage=$(usage $thisf $fargs)
+    [[ $# -eq 0 ]] && printf "$usage\n" && return 1
+    local args=$(checkargs $minargs $maxargs $#)
+    [[ $args != "ok" ]] && printf "$error $args\n$usage\n" && return 1
+
+    if [[ -z "$2" ]]; then
+        cliname=$1; appname=$1; vercmmd="--version"
     elif [[ -z "$3" ]]; then
-        cliname=$1
-        appname=$2
-        vercmmd="--version"
+        cliname=$1; appname=$2; vercmmd="--version"
     else
-        cliname=$1
-        appname=$2
-        vercmmd=$3
+        cliname=$1; appname=$2; vercmmd=$3
     fi
-    type=$(utype $cliname)
-    if [[ $type = 'file' || "$(which $cliname)" == /* ]]; then
+
+    local type=$(utype $cliname)
+    if [[ $type == "not found" ]]; then
+        printf "$yellow$cliname$reset not found\n"
+        return 1
+    fi
+
+    if [[ "$(uwhich $cliname)" == /* ]]; then
         msg='is installed in'
-        reg='\b[0-9]{1,}\.[0-9]{1,}(\.[0-9]{1,}){0,}\b'
-        app="${green}${appname}${reset}"
-        ver="$yellow$($cliname $vercmmd | grep -Eo $reg | head -1)$reset"
-        pth="$purple$(whereis -b $cliname | sed 's/.*: //')$reset"
-        echo -e "$app $ver $msg $pth"
+        apppath="$(uwhich $cliname)"
+        verstr="$($apppath $vercmmd 2>&1)"
+        ver=$(getver $verstr)
+        echo -e "${green}$appname${reset} ${yellow}$ver${reset} $msg ${cyan}$apppath${reset}"
     fi
     if [[ $type = 'alias' ]]; then
         msg='is an alias for'
@@ -246,11 +353,6 @@ function verinfo() {
         als="${green}$cliname${reset} $msg ${purple}$type${reset}"
         echo -e "$als"
     fi    
-    if [[ -z $type ]]; then
-        msg="is not available"
-        echo -e "${red}$cliname${reset} $msg"
-        return 2
-    fi
 }
 
 function makeconfln() {
@@ -375,6 +477,7 @@ function uptimeh() {
     fi
 }
 
+# Display macOS codename
 function macosname() {
     local version=$(sw_vers -productVersion)
     local major=$(echo $version | cut -d. -f1)
@@ -445,4 +548,4 @@ function minimize-login-info() {
     fi
 }
 
-export ZSH_FUNCTIONS_LOADED=true
+export ZSH_FUNCTIONS_LOADED=1

@@ -6,7 +6,7 @@ zsh_files+=("zsh_functions")
 
 # apt unattended quiet install
 function aptinstall() {
-    if [[ $(isinstalled needrestart) ]]; then
+    if [[ $(isinstalled needrestart) -eq 1 ]]; then
         needrestart-quiet
     fi
     export NEEDRESTART_MODE=a 
@@ -15,7 +15,7 @@ function aptinstall() {
     grpopt='-Eiv'
     filter='^needrestart|^update|^reading|^building|^scanning|^\(|^\s*$'
     sudo apt-get install $aptopt $@ | grep $grpopt $filter
-    if [[ $(isinstalled needrestart) ]]; then
+    if [[ $(isinstalled needrestart) -eq 1 ]]; then
         needrestart-verbose
     fi
 }
@@ -70,9 +70,9 @@ function isinstalled() {
 function isinstalledbybrew() {
     brew list $1 &>/dev/null
     if [ $? -eq 0 ]; then
-        echo 'yes'
+        echo 1
     else
-        echo 'no'
+        echo 1
     fi
 }
 
@@ -330,7 +330,7 @@ function logininfo() {
     local ttyc="$green$tty$reset"
     local remote=$(who | grep $tty | grep -oE '\([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\)' | tr -d '()')
     [[ -n $remote ]] && local remotec="from $cyan$remote$reset"
-    if [[ $(isinstalled ifconfig) ]]; then
+    if [[ $(isinstalled ifconfig) -eq 1 ]]; then
         local ip=$green$(ifconfig | awk '/inet / && !/127.0.0.1/ {print $2}')$reset
     else
         local ip=$(ip addr show | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | cut -d'/' -f1)
@@ -356,7 +356,7 @@ function sysupdate() {
         sudo sync
     fi
 
-    if [[ $(isinstalled brew) ]]; then
+    if [[ $(isinstalled brew) -eq 1 ]]; then
         brew update --auto-update
         brew upgrade
         brew cleanup

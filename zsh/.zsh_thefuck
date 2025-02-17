@@ -2,6 +2,4 @@
 
 # The Fuck helper
 
-if [[ $(isinstalled thefuck) ]]; then
-  eval $(thefuck --alias)
-fi
+eval $(thefuck --alias)

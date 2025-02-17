@@ -18,13 +18,30 @@ source $ZDOTDIR/.zsh_functions
 
 # INTEGRATIONS
 sourceif $ZDOTDIR/.zsh_omz $thisfile
-sourceif $ZDOTDIR/.zsh_omp $thisfile
-sourceif $ZDOTDIR/.zsh_bat $thisfile
-sourceif $ZDOTDIR/.zsh_brew $thisfile
-sourceif $ZDOTDIR/.zsh_fzf $thisfile
-sourceif $ZDOTDIR/.zsh_iterm $thisfile
-sourceif $ZDOTDIR/.zsh_thefuck $thisfile
-sourceif $ZDOTDIR/.zsh_zoxide $thisfile
+
+if [[ $(isinstalled oh-my-posh) == 1 ]]; then
+    sourceif $ZDOTDIR/.zsh_omp $thisfile
+fi
+
+if [[ $(isinstalled bat) == 1 ]]; then
+    sourceif $ZDOTDIR/.zsh_bat $thisfile
+fi
+
+if [[ $(isinstalled brew) == 1 ]]; then
+    sourceif $ZDOTDIR/.zsh_brew $thisfile
+fi
+
+if [[ $(isinstalled fzf) == 1 ]]; then
+    sourceif $ZDOTDIR/.zsh_fzf $thisfile
+fi
+
+if [[ $(isinstalled thefuck) == 1 ]]; then
+    sourceif $ZDOTDIR/.zsh_thefuck $thisfile
+fi
+
+if [[ $(isinstalled zoxide) ]]; then
+    sourceif $ZDOTDIR/.zsh_zoxide $thisfile
+fi
 
 # ALIASES
 sourceif $ZDOTDIR/.zsh_aliases $thisfile

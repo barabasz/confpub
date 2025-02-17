@@ -2,6 +2,5 @@
 
 # fzf shell integration
 
-if [[ $(isinstalled fzf) == 1 ]]; then
-  source <(fzf --zsh)
-fi
+source <(fzf --zsh)
+

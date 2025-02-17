@@ -4,10 +4,8 @@
 
 theme=$CONFDIR/omp/my.omp.json
 
-if [[ $(isinstalled oh-my-posh) ]]; then
-    if [[ -f $theme ]]; then
-        eval "$(oh-my-posh --config $theme init zsh)"
-    else
-        eval "$(oh-my-posh init zsh)"
-    fi
+if [[ -f $theme ]]; then
+    eval "$(oh-my-posh --config $theme init zsh)"
+else
+    eval "$(oh-my-posh init zsh)"
 fi

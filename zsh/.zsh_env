@@ -61,11 +61,7 @@ export ZFNFILE=$ZDOTDIR/.zsh_functions
 export PATH=$BINDIR:$BINDIR/common:$BINDIR/install:$BINDIR/test:$BINDIR/thisos:/usr/local/bin:$HOME/.local/bin:$PATH
 
 # PROMPT fallback (will be override by oh-my-posh)
-if [[ $(echo $0 | grep -o zsh) == 'zsh' ]]; then
-    export PS1="[%{%F{cyan}%}%n%{%f%}@%{%F{green}%}%m:%{%F{yellow}%}%~%{%f%}%]]$ "
-else
-    export PS1="[\[\033[36m\]\u\[\033[37m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]]$ "
-fi
+export PS1="[%{%F{cyan}%}%n%{%f%}@%{%F{green}%}%m:%{%F{yellow}%}%~%{%f%}%]]$ "
 
 # Preferred editor
 export EDITOR='nvim'

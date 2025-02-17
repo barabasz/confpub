@@ -61,8 +61,10 @@ if [[ $(isinstalled git) ]]; then
 fi
 
 ## gsed
-if [[ $(isinstalled gsed) ]]; then
-    alias sed='gsed'
+if [[ "$(osname)" == "macos" ]]; then
+    if [[ $(isinstalled gsed) ]]; then
+        alias sed='gsed'
+    fi
 fi
 
 ## mc

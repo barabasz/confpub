@@ -1,7 +1,7 @@
 #!/bin/zsh
 
+thisfile=".zshrc"
 # track loaded files
-# local thispath="${(%):-%x}"
 zsh_files+=("zshrc")
 
 # LOCALE
@@ -16,9 +16,6 @@ source $LIBDIR/print.sh
 # FUNCTIONS
 source $ZDOTDIR/.zsh_functions
 
-# ALIASES
-sourceif $ZDOTDIR/.zsh_aliases $thisfile
-
 # INTEGRATIONS
 sourceif $ZDOTDIR/.zsh_omz $thisfile
 sourceif $ZDOTDIR/.zsh_omp $thisfile
@@ -28,6 +25,9 @@ sourceif $ZDOTDIR/.zsh_fzf $thisfile
 sourceif $ZDOTDIR/.zsh_iterm $thisfile
 sourceif $ZDOTDIR/.zsh_thefuck $thisfile
 sourceif $ZDOTDIR/.zsh_zoxide $thisfile
+
+# ALIASES
+sourceif $ZDOTDIR/.zsh_aliases $thisfile
 
 # Clean up
 # https://bit.ly/zsh_sessions

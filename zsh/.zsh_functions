@@ -72,22 +72,105 @@ function isinstalledbybrew() {
     fi
 }
 
-# Remove target and create symlink
-function lnf() {
-    if [[ ! $# -eq 2 ]]; then
-        echo "Usage: lnf <source> <target>"
+# Better ln command for creating symbolic links
+function lns() {
+    
+    # function properties
+    local fargs="<destination> <source>"
+    local minargs=2
+    local maxargs=2
+    
+    # argument check
+    local thisf="lns"
+    local error="${redi}$thisf error:${reset}"
+    local info="${green}$thisf info:${reset}"
+    local usage=$(usage $thisf $fargs)
+    [[ $# -eq 0 ]] && printf "$usage\n" && return 1
+    local args=$(checkargs $minargs $maxargs $#)
+    [[ $args != "ok" ]] && printf "$error $args\n$usage\n" && return 1
+
+    #main
+    local dst="$1"
+    local src="$2"
+    local dst_c="${cyan}$dst${reset}"
+    local src_c="${cyan}$src${reset}"
+    local src_dir="$(dirname "$src")"
+    local src_dir_c="${cyan}$src_dir${reset}"
+    local arr="${yellowi}→${reset}"
+    local errors=0
+
+    # Check if both the destination and source are provided as absolute paths.
+    if [[ "$dst" != /* ]]; then
+        printf "${error} the destination $dst_c must be an absolute path.\n"
+        ((errors+=1))
+    fi
+    if [[ "$src" != /* ]]; then
+        printf "${error} the source $src_c must be an absolute path.\n"
+        ((errors+=1))
+    fi
+
+    # Check if the destination is different from the source
+    if [[ "$dst" == "$src" ]]; then
+        printf "${error} destination and source cannot be the same.\n"
+        ((errors+=1))
+    fi
+
+    # Check if the destination exists
+    if [[ ! -e "$dst" ]]; then
+        printf "${error} destination $dst_c does not exist.\n"
+        ((errors+=1))
+    fi
+
+    # Check if the destination is readable
+    if [[ ! -r "$dst" ]]; then
+        printf "${error} destination $dst_c is not readable.\n"
+        ((errors+=1))
+    fi
+
+    # Check if the destination is a folder or file
+    if [[ ! -d "$dst" ]] && [[ ! -f "$dst" ]]; then
+        printf "${error} destination $dst_c is neither a directory nor a file.\n"
+        ((errors+=1))
+    fi
+
+    # Check if the current process can write to the source's folder
+    if [[ ! -w "$src_dir" ]]; then
+        printf "${error} cannot write to the source's folder $src_dir_c\n"
+        ((errors+=1))
+    fi
+
+    # Exit if there are errors
+    if [[ $errors > 0 ]]; then
         return 1
     fi
-    if [[ ! -r $1 ]]; then
-        echo "$1 is not readable"
+    
+    # Check if exactly such a symbolic link does not already exist
+    if [[ -L "$src" ]] && [[ "$(readlink "$src")" == "$dst" ]]; then
+        printf "${info} symbolic link $src_c $arr $dst_c already exists.\n"
+        return 0
+    fi
+
+    # Remove the existing source (file, folder, or wrong symbolic link)
+    if [[ -e "$src" ]]; then
+        rm -rf "$src"
+        if [[ $? -ne 0 ]]; then
+            printf "${error} failed while rmoving $src_c (error rissed by rm).\n"
+            return 1
+        else
+             printf "${info} removed existing source $src_c.\n"
+        fi
+    fi
+
+    # Create the symbolic link
+    ln -s "$dst" "$src"
+    if [[ $? != 0 ]]; then
+        printf "${error} failed to create symbolic link (error rissed by ln).\n"
         return 1
+    else
+        printf "${info} created symbolic link: $src_c $arr $dst_c\n"
+        return 0
     fi
-    if [[ -r $2 ]]; then
-        rm -r $2
-        echo "removed $2"
-    fi
-    ln -sfF $1 $2
-    echo "symlink $2 → $1 created"
+
 }
 
 # Create dir and enter it

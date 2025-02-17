@@ -138,11 +138,18 @@ function fman() {
 }
 
 # Extract version number from string
-function getver() {
+function getver_old() {
     local verstr=$1
     verstr=$(echo $verstr | sed 's/^[^0-9]*//')
     verstr=$(echo $verstr | grep -oE '[0-9]+(\.[0-9]+)*' | head -1)
     echo $verstr
+}
+
+function getver() {
+    local verstr=$1
+    verstr=$(echo "$verstr" | sed 's/^[^0-9]*//')
+    verstr=$(echo "$verstr" | grep -oE '[0-9]+(\.[0-9]+)*' | head -1)
+    echo "$verstr"
 }
 
 # Get shell version
@@ -343,8 +350,8 @@ function verinfo() {
         msg='is installed in'
         apppath="$(uwhich $cliname)"
         verstr="$($apppath $vercmmd 2>&1)"
-        ver=$(getver $verstr)
-        echo -e "${green}$appname${reset} ${yellow}$ver${reset} $msg ${cyan}$apppath${reset}"
+        ver=$(getver "$verstr")
+        printf "${green}$appname${reset} ${yellow}${ver}${reset} $msg ${cyan}$apppath${reset}\n"
     fi
     if [[ $type = 'alias' ]]; then
         msg='is an alias for'

@@ -39,7 +39,7 @@ if [[ $(isinstalled thefuck) == 1 ]]; then
     sourceif $ZDOTDIR/.zsh_thefuck $thisfile
 fi
 
-if [[ $(isinstalled zoxide) ]]; then
+if [[ $(isinstalled zoxide) == 1 ]]; then
     sourceif $ZDOTDIR/.zsh_zoxide $thisfile
 fi
 

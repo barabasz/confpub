@@ -1,52 +1,57 @@
 #!/bin/zsh
 
-thisfile=".zshrc"
 # track loaded files
-zsh_files+=("zshrc")
+local thisfile="zshrc"
+zsh_files+=("$thisfile")
 
 # LOCALE
-source $ZDOTDIR/.zsh_locale
+
+sourceif $ZDOTDIR/.zsh_locale $thisfile
 
 # MODULES
-source $LIBDIR/ansi.sh
-source $LIBDIR/log.sh
-source $LIBDIR/colors.sh
-source $LIBDIR/print.sh
 
-# FUNCTIONS
-source $ZDOTDIR/.zsh_functions
+sourceif $LIBDIR/ansi.sh $thisfile
+sourceif $LIBDIR/log.sh $thisfile
+sourceif $LIBDIR/colors.sh $thisfile
+sourceif $LIBDIR/print.sh $thisfile
 
 # INTEGRATIONS
-sourceif $ZDOTDIR/.zsh_omz $thisfile
 
+## oh-my-zsh
+if [[ isomzinstalled == 1 ]]; then
+    sourceif $ZDOTDIR/.zsh_omz $thisfile
+fi
+
+## oh-my-posh
 if [[ $(isinstalled oh-my-posh) == 1 ]]; then
     sourceif $ZDOTDIR/.zsh_omp $thisfile
 fi
 
+## bat (cat clone)
 if [[ $(isinstalled bat) == 1 ]]; then
     sourceif $ZDOTDIR/.zsh_bat $thisfile
 fi
 
+## brew (package manager)
 if [[ $(isinstalled brew) == 1 ]]; then
     sourceif $ZDOTDIR/.zsh_brew $thisfile
 fi
 
+## fzf (fuzzy finder)
 if [[ $(isinstalled fzf) == 1 ]]; then
     sourceif $ZDOTDIR/.zsh_fzf $thisfile
 fi
 
+## thefuck (corrects previous command)
 if [[ $(isinstalled thefuck) == 1 ]]; then
     sourceif $ZDOTDIR/.zsh_thefuck $thisfile
 fi
 
+## zoxide (cd replacement)
 if [[ $(isinstalled zoxide) == 1 ]]; then
     sourceif $ZDOTDIR/.zsh_zoxide $thisfile
 fi
 
 # ALIASES
-sourceif $ZDOTDIR/.zsh_aliases $thisfile
 
-# Clean up
-# https://bit.ly/zsh_sessions
-[[ -d $ZDOTDIR/.zsh_sessions ]] && rm -rf $ZDOTDIR/.zsh_sessions/*
-[[ -d $ZDOTDIR/.zsh_sessions ]] && rmdir $ZDOTDIR/.zsh_sessions
+sourceif $ZDOTDIR/.zsh_aliases $thisfile

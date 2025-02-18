@@ -1,8 +1,14 @@
 #!/bin/zsh
 
 # track loaded files
-# local thispath="${(%):-%x}"
-zsh_files=("zshenv")
+local thisfile="zshenv"
+zsh_files+=("$thisfile")
 
+# zsh configuration directory
 export ZDOTDIR=$HOME/.config/zsh
-source $ZDOTDIR/.zsh_env
+
+# functions
+source $ZDOTDIR/.zsh_functions
+
+# environment variables
+sourceif $ZDOTDIR/.zsh_env $thisfile

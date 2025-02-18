@@ -47,6 +47,7 @@ export CACHEDIR=$HOME/.cache
 export SHELL_SESSION_DIR="$CACHEDIR/.zsh_sessions"
 [[ ! -d $SHELL_SESSION_DIR ]] && mkdir -p $SHELL_SESSION_DIR
 export ZSH_LOAD_FILE=$ZDOTDIR/.zsh_load
+export ZSH="$CONFDIR/omz"
 
 # XDG
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$CONFDIR}

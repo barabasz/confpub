@@ -18,7 +18,7 @@ sourceif $LIBDIR/print.sh $thisfile
 # INTEGRATIONS
 
 ## oh-my-zsh
-if [[ isomzinstalled == 1 ]]; then
+if [[ -f $ZSH/oh-my-zsh.sh ]]; then
     sourceif $ZDOTDIR/.zsh_omz $thisfile
 fi
 

@@ -47,6 +47,11 @@ if [[ $(isinstalled thefuck) == 1 ]]; then
     sourceif $ZDOTDIR/.zsh_thefuck $thisfile
 fi
 
+## yazi file manager
+if [[ $(isinstalled yazi) == 1 ]]; then
+    sourceif $ZDOTDIR/.zsh_yazi $thisfile
+fi
+
 ## zoxide (cd replacement)
 if [[ $(isinstalled zoxide) == 1 ]]; then
     sourceif $ZDOTDIR/.zsh_zoxide $thisfile

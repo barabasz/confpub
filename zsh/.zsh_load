@@ -21,3 +21,5 @@ source $LIBDIR/print.sh
 if [[ $(isinstalled brew) == 1 ]]; then
     sourceif $ZDOTDIR/.zsh_brew $thisfile
 fi
+
+printinfo "ZSH_LOAD_FILE loded."

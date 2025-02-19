@@ -55,3 +55,10 @@ fi
 # ALIASES
 
 sourceif $ZDOTDIR/.zsh_aliases $thisfile
+
+# CLEANUP
+
+# https://bit.ly/zsh_sessions
+if [[ -d $ZDOTDIR/.zsh_sessions ]]; then
+    rm -rf $ZDOTDIR/.zsh_sessions > /dev/null 2>&1
+fi

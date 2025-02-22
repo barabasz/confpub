@@ -1,10 +1,10 @@
 #!/bin/zsh
 
+# VARIABLES
+source $ZDOTDIR/.zsh_env
+
 # FUNCTIONS
 source $ZDOTDIR/.zsh_functions
-
-# VARIABLES
-source $HOME/.zshenv
 
 # MODULES
 source $LIBDIR/ansi.sh
@@ -21,5 +21,3 @@ source $LIBDIR/print.sh
 if [[ $(isinstalled brew) == 1 ]]; then
     sourceif $ZDOTDIR/.zsh_brew $thisfile
 fi
-
-printinfo "ZSH_LOAD_FILE loded."

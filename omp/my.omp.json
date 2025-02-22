@@ -159,7 +159,7 @@
             "type": "executiontime"
           },
           {
-            "background": "#000000",
+            "background": "#387f75",
             "background_templates": [
               "{{ if gt .Code 0 }}#cc2222{{ end }}"
             ],

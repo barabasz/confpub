@@ -38,6 +38,7 @@ export BINDIR=$HOME/bin
 hash -d bin=$BINDIR
 export HOMEDIR=$HOME
 export LIBDIR=$HOME/lib
+hash -d lib=$LIBDIR
 export CONFDIR=$HOME/.config
 hash -d config=$CONFDIR
 export DLDIR=$HOME/Downloads

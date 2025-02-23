@@ -7,14 +7,14 @@ zsh_files+=("$thisfile")
 # zsh configuration directory
 export ZDOTDIR=$HOME/.config/zsh
 
+# environment variables
+source $ZDOTDIR/.zsh_env
+
 # functions
 source $ZDOTDIR/.zsh_functions
 
 # locale
 sourceif $ZDOTDIR/.zsh_locale $thisfile
-
-# environment variables
-sourceif $ZDOTDIR/.zsh_env $thisfile
 
 # modules
 sourceif $LIBDIR/ansi.sh $thisfile

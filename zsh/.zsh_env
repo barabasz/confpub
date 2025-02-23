@@ -25,6 +25,7 @@ export TMPDIR=$TMP
 export GHDIR=$HOME/GitHub
 hash -d git=$GHDIR
 export GHBINDIR=$GHDIR/bin
+export GHLIBDIR=$GHDIR/lib
 export GHCONFDIR=$GHDIR/config
 export GHCONFPRIVDIR=$GHDIR/confpriv
 ### SSH

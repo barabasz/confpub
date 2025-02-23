@@ -10,16 +10,17 @@ export ZDOTDIR=$HOME/.config/zsh
 # environment variables
 source $ZDOTDIR/.zsh_env
 
+# modules
+source $LIBDIR/ansi.sh
+source $LIBDIR/log.sh
+source $LIBDIR/colors.sh
+source $LIBDIR/print.sh
+
 # functions
 source $ZDOTDIR/.zsh_functions
 
 # locale
 sourceif $ZDOTDIR/.zsh_locale $thisfile
 
-# modules
-sourceif $LIBDIR/ansi.sh $thisfile
-sourceif $LIBDIR/log.sh $thisfile
-sourceif $LIBDIR/colors.sh $thisfile
-sourceif $LIBDIR/print.sh $thisfile
 
 

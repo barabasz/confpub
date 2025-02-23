@@ -74,6 +74,11 @@ export VISUAL='code'
 # VARIA
 export MYGH='https://raw.githubusercontent.com/barabasz'
 
+# LOG
+export LOG_SHOW_ICONS=1 # log.sh: 1 for icons, 0 for nothing
+export LOG_COLOR_TEXTS=1 # log.sh: 1 for colors, 0 for white
+export LOG_EMOJI_ICONS=0 # log.sh: 1 for emoji, 0 for text
+
 # Get the colors in the opened man page itself
 export MANPAGER="sh -c 'col -bx | bat -l man -p --paging always'"
 

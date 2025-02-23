@@ -4,17 +4,6 @@
 local thisfile="zshrc"
 zsh_files+=("$thisfile")
 
-# LOCALE
-
-sourceif $ZDOTDIR/.zsh_locale $thisfile
-
-# MODULES
-
-sourceif $LIBDIR/ansi.sh $thisfile
-sourceif $LIBDIR/log.sh $thisfile
-sourceif $LIBDIR/colors.sh $thisfile
-sourceif $LIBDIR/print.sh $thisfile
-
 # INTEGRATIONS
 
 ## oh-my-zsh
@@ -67,3 +56,5 @@ sourceif $ZDOTDIR/.zsh_aliases $thisfile
 if [[ -d $ZDOTDIR/.zsh_sessions ]]; then
     rm -rf $ZDOTDIR/.zsh_sessions > /dev/null 2>&1
 fi
+
+export ZSHRC_LOADED=1

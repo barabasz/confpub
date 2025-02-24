@@ -15,6 +15,9 @@ source $LIBDIR/ansi.sh
 source $LIBDIR/log.sh
 source $LIBDIR/colors.sh
 source $LIBDIR/print.sh
+source $LIBDIR/os.sh
+source $LIBDIR/info.sh
+source $LIBDIR/install.sh
 
 # functions
 source $ZDOTDIR/.zsh_functions

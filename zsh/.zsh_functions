@@ -4,18 +4,6 @@
 # local thispath="${(%):-%x}"
 zsh_files+=("zsh_functions")
 
-# apt unattended quiet install
-function aptinstall() {
-    [[ $(isinstalled needrestart) -eq 1 ]] && needrestart-quiet
-    export NEEDRESTART_MODE=a 
-    export DEBIAN_FRONTEND=noninteractive
-    aptopt='-qq'
-    grpopt='-Eiv'
-    filter='^needrestart|^update|^reading|^building|^scanning|^\(|^\s*$'
-    sudo apt-get install $aptopt $@ | grep $grpopt $filter
-    [[ $(isinstalled needrestart) -eq 1 ]] && needrestart-verbose
-}
-
 # Source file if exists
 function sourceif() {
     [[ $# -eq 0 ]] && echo "Usage: sourceif <file> [error message]" && return 1
@@ -44,50 +32,21 @@ function extsource() {
     source /dev/stdin <<< "$(curl -fsSL $1)"
 }
 
-# Get shell name
-function get_shell() {
-    echo $SHELL | xargs basename
-}
-
-function command_exists() {
-   type "$1" &>/dev/null
-}
-
-# Check if programm is installed
-function isinstalled() {
-    if [[ $(utype $1) == 'file' || "$(uwhich $1)" == /* ]]; then
-        echo 1
-    else
-        echo 0
-    fi
-}
-
-# Check if package is installed by Brew
-function isinstalledbybrew() {
-    brew list $1 &>/dev/null
-    if [ $? -eq 0 ]; then
-        echo 1
-    else
-        echo 1
-    fi
-}
-
 # Better ln command for creating symbolic links
 function lns() {
     
     # function properties
+    local fname="lns"
     local fargs="<destination> <source>"
+    local finfo="$fname info:"
+    local ferror="$fname error:"
+    local fusage=$(usage $fname $fargs)
     local minargs=2
     local maxargs=2
     
     # argument check
-    local thisf="lns"
-    local error="${redi}$thisf error:${reset}"
-    local info="${green}$thisf info:${reset}"
-    local usage=$(usage $thisf $fargs)
-    [[ $# -eq 0 ]] && printf "$usage\n" && return 1
     local args=$(checkargs $minargs $maxargs $#)
-    [[ $args != "ok" ]] && printf "$error $args\n$usage\n" && return 1
+    [[ $args != "ok" ]] && log::error $ferror $args && log::info $fusage && return 1
 
     #main
     local dst="$1"
@@ -178,22 +137,6 @@ function mdcd() {
     mkdir -p $1 && cd $_
 }
 
-# Display OS name
-function osname() {
-    local ostype=$(uname -s | tr '[:upper:]' '[:lower:]')
-    if [[ $ostype == 'darwin' ]]; then
-        printf "macos"
-    elif [[ $ostype == 'linux' ]]; then
-        if [[ -f /etc/os-release ]]; then
-            # awk -F= '/^ID=/{print $2}' /etc/os-release
-            local id=$(cat /etc/os-release | grep "^ID=")
-            printf "${id#*=}"
-        fi
-    else
-        printf "unknown"
-    fi
-}
-
 # modify /etc/needrestart/needrestart.conf
 # use: needrestart-mod parameter value
 if [[ "$(osname)" != "macos" ]]; then
@@ -226,44 +169,6 @@ function getver() {
     verstr=$(echo "$verstr" | sed 's/^[^0-9]*//')
     verstr=$(echo "$verstr" | grep -oE '[0-9]+(\.[0-9]+)*' | head -1)
     echo "$verstr"
-}
-
-# Get shell version
-function shellver() {
-    if [[ $(shellname) == 'zsh' ]]; then
-        local version=$(zsh --version)
-    elif [[ $(shellname) == 'bash' ]]; then
-        local version=$(bash --version)
-        version="${version#*version }"
-    else
-        echo "extractver: unknown shell"
-        return 1
-    fi
-    echo $(getver $version)
-}
-
-# Get shell name
-function shellname() {
-    case "$(ps -p $$ -o comm=)" in
-        *zsh)
-            echo "zsh"
-            ;;
-        *bash)
-            echo "bash"
-            ;;
-        *)
-            echo "unknown"
-            ;;
-    esac
-}
-
-# Information about function parameters
-function params() {
-    echo "Number of parameters: $#"
-    echo "Parameters: $@"
-    echo "First parameter: $1"
-    echo "Second parameter: $2"
-    echo "Last parameter: ${@: -1}"
 }
 
 # Check number of parameters
@@ -393,77 +298,6 @@ function uwhich() {
     fi
 }
 
-# Short version info, usage: verinfo cliname appname versioncommand
-# Example: verinfo gzip "GNU Zip" --version
-function verinfo() {
-    # function properties
-    local fargs="<cliname> [appname] [versioncommand]"
-    local minargs=0
-    local maxargs=3
-    # argument check
-    local thisf="${funcstack[1]}"
-    local error="${redi}$thisf error:${reset}"
-    local usage=$(usage $thisf $fargs)
-    [[ $# -eq 0 ]] && printf "$usage\n" && return 1
-    local args=$(checkargs $minargs $maxargs $#)
-    [[ $args != "ok" ]] && printf "$error $args\n$usage\n" && return 1
-
-    if [[ -z "$2" ]]; then
-        cliname=$1; appname=$1; vercmmd="--version"
-    elif [[ -z "$3" ]]; then
-        cliname=$1; appname=$2; vercmmd="--version"
-    else
-        cliname=$1; appname=$2; vercmmd=$3
-    fi
-
-    local type=$(utype $cliname)
-    if [[ $type == "not found" ]]; then
-        printf "$yellow$cliname$reset not found\n"
-        return 1
-    fi
-
-    if [[ "$(uwhich $cliname)" == /* ]]; then
-        msg='is installed in'
-        apppath="$(uwhich $cliname)"
-        verstr="$($apppath $vercmmd 2>&1)"
-        ver=$(getver "$verstr")
-        printf "${green}$appname${reset} ${yellow}${ver}${reset} $msg ${cyan}$apppath${reset}\n"
-    fi
-    if [[ $type = 'alias' ]]; then
-        msg='is an alias for'
-        als="${green}$cliname${reset} $msg ${purple}$(alias $cliname | sed "s/.*=//")${reset}"
-        echo -e "$als"
-    fi
-    if [[ $type = 'function' || $type = 'keyword' || $type = 'builtin' ]]; then
-        msg='is a'
-        als="${green}$cliname${reset} $msg ${purple}$type${reset}"
-        echo -e "$als"
-    fi    
-}
-
-# Create symbolic link to config file
-function makeconfln() {
-    local source=$GHCONFDIR/$1
-    local target=$CONFDIR/$1
-    local source_c="${cyan}$source${reset}"
-    local target_c="${cyan}$target${reset}"
-    local arrow="${yellow}→${reset}"
-    if [[ -L $target ]] && [[ "$(readlink $target)" = "$source" ]]; then
-        echo "symlink $target_c $arrow $source_c exists"
-    else
-        if [[ -a $target ]]; then
-            if [[ -d $target ]]; then
-                echo "removing folder $target_c"
-            else
-                echo "removing file $target_c"
-            fi
-            rm -r $target
-        fi
-        ln -sfF $source $target
-        echo "symlink $target_c $arrow $source_c created"
-    fi
-}
-
 # Download and unzip file from URL
 function dlunzip() {
     if [ $# -ne 2 ]; then
@@ -501,70 +335,6 @@ function dlunzip() {
     echo $extdir
 }
 
-# Display login files and its order
-function loginfiles() {
-    printf "Login files: "
-    if [[ -z $zsh_files ]]; then
-        printf "${redi}error${reset}: zsh_files not found"
-        return
-    else
-        i=1; l=${#zsh_files[@]}
-        for file in $zsh_files; do
-            f=$(basename $file)
-            printf "${cyan}${f#.}${reset}"
-            [[ i -lt l ]] && printf " ${yellow}→${reset} "
-            ((i++))
-        done
-    fi
-    printf "\n"
-}
-
-# Display login information
-function logininfo() {
-    local user=$(whoami)
-    local userc=$yellow$user$reset
-    local host=$(hostname -s)
-    local domain=$(hostname -d)
-    [[ -n $domain ]] && host="$host.$domain"
-    local hostc=$cyan$host$reset
-    local tty=$(tty | sed 's|/dev/||')
-    local ttyc="$green$tty$reset"
-    local remote=$(who | grep $tty | grep -oE '\([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\)' | tr -d '()')
-    [[ -n $remote ]] && local remotec="from $cyan$remote$reset"
-    if [[ $(isinstalled ifconfig) -eq 1 ]]; then
-        local ip=$green$(ifconfig | awk '/inet / && !/127.0.0.1/ {print $2}')$reset
-    else
-        local ip=$(ip addr show | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | cut -d'/' -f1)
-    fi
-    local ipc=$green$ip$reset
-    printf "Logged in as $userc@$hostc ($ipc) on $ttyc $remotec\n"
-}
-
-# Forcing full system update
-function sysupdate() {
-    if [[ ! "$(osname)" == "macos" ]]; then
-        envopt="NEEDRESTART_MODE=a DEBIAN_FRONTEND=noninteractive"
-        aptopt="-qq"
-        filter1='^Hit|^Get'
-        filter2='^NEEDRESTART|^update|Reading'
-
-        sudo apt-get update | grep -Ev $filter1
-        sudo $envopt apt-get $aptopt upgrade | grep -Ev $filter2
-        sudo $envopt apt-get $aptopt dist-upgrade
-
-        sudo apt-get $aptopt clean
-        sudo apt-get $aptopt autoclean
-        sudo apt-get $aptopt autoremove
-        sudo sync
-    fi
-
-    if [[ $(isinstalled brew) -eq 1 ]]; then
-        brew update --auto-update
-        brew upgrade
-        brew cleanup
-    fi
-}
-
 # Calculate uptime in hours
 function uptimeh() {
     if [[ $(osname) == "macos" ]]; then
@@ -575,55 +345,6 @@ function uptimeh() {
     else
         printf $(awk '{printf "%.2f\n", $1/3600}' /proc/uptime)
     fi
-}
-
-# Display macOS codename
-function macosname() {
-    local version=$(sw_vers -productVersion)
-    local major=$(echo $version | cut -d. -f1)
-    case $major in
-        15) printf "Seqouia" ;;
-        14) printf "Sonoma" ;;
-        13) printf "Ventura" ;;
-        12) printf "Monterey" ;;
-        11) printf "Big Sur" ;;
-        *)  printf "Unknown" ;;
-    esac
-}
-
-# Display system info
-function sysinfo() {
-    local os_kernel=$(uname -r)
-    local os_shell=$(shellname)
-    local os_shell_ver=$(shellver)
-    local os_arch=$(uname -m)
-    local os_uptime=$(uptimeh)
-
-    if [[ $(osname) == "macos" ]]; then
-        local os_name="macOS"
-        local os_version=$(sw_vers -productVersion)
-        local os_codename=$(macosname)
-    else
-        local os_name=$(awk -F= '/^NAME=/{gsub(/^"|"$/, "", $2); print $2}' /etc/os-release)
-        local os_version=$(awk -F= '/^VERSION_ID=/{gsub(/^"|"$/, "", $2); print $2}' /etc/os-release)
-        local os_codename=$(awk -F= '/^VERSION_CODENAME=/{gsub(/^"|"$/, "", $2); print $2}' /etc/os-release)
-    fi
-    printf "This is ${yellowi}$os_name${reset} $os_version (${(C)os_codename}) with ${yellow}$os_shell${reset} $os_shell_ver running on ${yellow}$os_arch${reset} for $os_uptime hrs\n"
-}
-
-# Check if oh-my-zsh is installed
-function isomzinstalled() {
-    if [[ -d $ZSH ]] && [[ $(omz version | grep -o 'master' | head -1) = 'master' ]];
-    then echo 1; else echo 0; fi
-}
-
-# Install oh-my-zsh plugin
-function installomzplugin() {
-    local repo=https://github.com/zsh-users/$1.git
-    local pdir=$ZSH_CUSTOM/plugins/$1
-    printhead "Installing $1"
-    [[ -d $pdir ]] && rm -rf $pdir
-    git clone $repo $pdir
 }
 
 # Display oh-my-zsh version
@@ -649,19 +370,5 @@ function minimize-login-info() {
     fi
 }
 
-# Show arguments with numbers
-showargs() {
-    local y=$(ansi bright yellow)
-    local r=$(ansi reset)
-    local j=0
-    if [ $# -eq 0 ]; then
-        log::error "No arguments provided."
-        printinfo "Usage: showargs <arg1> <arg2> ... <argN>"
-        return 1
-    fi
-    for i in "$@"; do
-        echo "$y#$((++j))$r: $i"
-    done
-}
 
 export ZSH_FUNCTIONS_LOADED=1

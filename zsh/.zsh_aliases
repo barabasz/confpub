@@ -10,8 +10,9 @@ alias -g G='| grep'
 
 # Common
 
-alias reload="source $ZDOTDIR/.zshrc && omz reload"
+alias reload="source $ZDOTDIR/.zshrc && omz reload" # Reload zsh configuration
 alias myip='curl icanhazip.com' # Show public IP
+alias mdcd='mkdir -p $1 && cd $_' # Make directory and change to it
 
 # Applications
 

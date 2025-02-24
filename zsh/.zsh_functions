@@ -22,15 +22,7 @@ function sourceif() {
     fi
 }
 
-# Execute external script
-function extscript() {
-    /bin/bash -c "$(curl -fsSL $1)"
-}
 
-# Source external file
-function extsource() {
-    source /dev/stdin <<< "$(curl -fsSL $1)"
-}
 
 # Better ln command for creating symbolic links
 function lns() {
@@ -132,43 +124,11 @@ function lns() {
 
 }
 
-# Create dir and enter it
-function mdcd() {
-    mkdir -p $1 && cd $_
-}
 
-# modify /etc/needrestart/needrestart.conf
-# use: needrestart-mod parameter value
-if [[ "$(osname)" != "macos" ]]; then
-    function needrestart-mod() {
-        filename=/etc/needrestart/needrestart.conf
-        sudo sed -i "s/^#\?\s\?\$nrconf{$1}.*/\$nrconf{$1} = $2;/" $filename
-    }
-    function needrestart-quiet() {
-        needrestart-mod verbosity 0
-        needrestart-mod systemctl_combine 0
-        needrestart-mod kernelhints 0
-        needrestart-mod ucodehints 0
-    }
-    function needrestart-verbose() {
-        needrestart-mod verbosity 1
-        needrestart-mod systemctl_combine 1
-        needrestart-mod kernelhints 1
-        needrestart-mod ucodehints 1
-    }
-fi
 
 # Search man with fzf
 function fman() {
     man -k . | fzf -q "$1" --prompt='man> '  --preview $'echo {} | tr -d \'()\' | awk \'{printf "%s ", $2} {print $1}\' | xargs -r man | col -bx | bat -l man -p --color always' | tr -d '()' | awk '{printf "%s ", $2} {print $1}' | xargs -r man
-}
-
-# Extract version number from string
-function getver() {
-    local verstr=$1
-    verstr=$(echo "$verstr" | sed 's/^[^0-9]*//')
-    verstr=$(echo "$verstr" | grep -oE '[0-9]+(\.[0-9]+)*' | head -1)
-    echo "$verstr"
 }
 
 # Check number of parameters
@@ -214,12 +174,7 @@ function checkargs() {
     return 0
 }
 
-# Usage message for functions
-function usage() {
-    local fname=$1
-    local fargs=$2
-    printf "$1 usage: ${yellow}$1${reset} ${green}$2${reset}\n"
-}
+
 
 # Universal better type command for bash and zsh
 # returns: 'file', 'alias', 'function', 'keyword', 'builtin' or 'not found'
@@ -347,28 +302,7 @@ function uptimeh() {
     fi
 }
 
-# Display oh-my-zsh version
-function omzversion() {
-    printf "${green}oh-my-zsh ${yellow}$(omz version)$reset is installed in ${purple}$ZSH${reset}\n"
-}
 
-function minimize-login-info() {
-    if [[ "$(osname)" == "ubuntu" ]]; then
-        sudo chmod -x /etc/update-motd.d/00-header
-        sudo chmod -x /etc/update-motd.d/10-help-text
-        sudo chmod -x /etc/update-motd.d/50-motd-news
-        #sudo chmod -x /etc/update-motd.d/90-updates-available
-        sudo chmod -x /etc/update-motd.d/91-contract-ua-esm-status
-    elif [[ "$(osname)" == "debian" ]]; then
-        #sudo chmod -x /etc/update-motd.d/10-uname
-        sudo cp /etc/motd /etc/motd.org
-        sudo rm -f /etc/motd
-        sudo touch /etc/motd
-    fi
-    if [[ ! "$(osname)" == "macos" ]]; then
-        sudo ln -sf ~/GitHub/config/motd/05-header /etc/update-motd.d
-    fi
-}
 
 
 export ZSH_FUNCTIONS_LOADED=1

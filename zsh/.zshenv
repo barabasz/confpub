@@ -7,20 +7,15 @@ zsh_files+=("$thisfile")
 # zsh configuration directory
 export ZDOTDIR=$HOME/.config/zsh
 
-# environment variables
+# load environment variables
 source $ZDOTDIR/.zsh_env
 
-# modules
-source $LIBDIR/ansi.sh
-source $LIBDIR/log.sh
-source $LIBDIR/colors.sh
-source $LIBDIR/print.sh
-source $LIBDIR/os.sh
-source $LIBDIR/info.sh
-source $LIBDIR/install.sh
-
-# functions
-source $ZDOTDIR/.zsh_functions
+# load functions
+for file in "$LIBDIR"/*.sh; do
+    if [[ -f "$file" && ! "$(basename "$file")" =~ ^_ ]]; then
+        source "$file"
+    fi
+done
 
 # locale
 sourceif $ZDOTDIR/.zsh_locale $thisfile

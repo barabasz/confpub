@@ -6,9 +6,9 @@ zsh_files+=("zlogin")
 
 # LOGIN INFO
 
-if [[ ${ZSH_FUNCTIONS_LOADED} ]] && [[ $LOGIN_INFO == 1 ]]; then
+if [[ $LOGIN_INFO == 1 ]]; then
     sysinfo
-    # loginfiles
+    loginfiles
     logininfo
     printf "\n"
 fi

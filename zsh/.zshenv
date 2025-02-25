@@ -11,14 +11,11 @@ export ZDOTDIR=$HOME/.config/zsh
 source $ZDOTDIR/.zsh_env
 
 # load functions
-for file in "$LIBDIR"/*.sh; do
-    if [[ -f "$file" && ! "$(basename "$file")" =~ ^_ ]]; then
-        source "$file"
-    fi
+for f in "$LIBDIR"/*.sh; do
+    [[ -f "$f" && ! "$(basename "$f")" =~ ^_ ]] && source "$f"
 done
 
 # locale
 sourceif $ZDOTDIR/.zsh_locale $thisfile
 
-
-
+export ZSHENV_LOADED=1

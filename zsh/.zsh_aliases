@@ -49,6 +49,11 @@ if [[ $(isinstalled eza) == 1 ]]; then
     alias tree3='eza --tree --level=3 --icons'
 fi
 
+## gdate
+if [[ $(isinstalled gdate) == 1 ]]; then    
+    alias date='gdate'
+fi
+
 ## git
 if [[ $(isinstalled git) == 1 ]]; then    
     alias gaa='git add --all'

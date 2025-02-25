@@ -12,3 +12,5 @@ if [[ $LOGIN_INFO == 1 ]]; then
     logininfo
     printf "\n"
 fi
+
+export ZLOGIN_LOADED=1

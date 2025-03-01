@@ -1,54 +1,55 @@
 #!/bin/zsh
 
-# track loaded files
-local thisfile="zshrc"
-zsh_files+=("$thisfile")
-
 # INTEGRATIONS
 
 ## oh-my-zsh
 if [[ -f $ZSH/oh-my-zsh.sh ]]; then
-    sourceif $ZDOTDIR/.zsh_omz $thisfile
+    sourceif $ZDOTDIR/assets/.zsh_omz $thisfile
 fi
 
 ## oh-my-posh
 if [[ $(isinstalled oh-my-posh) == 1 ]]; then
-    sourceif $ZDOTDIR/.zsh_omp $thisfile
+    sourceif $ZDOTDIR/assets/.zsh_omp $thisfile
 fi
 
 ## bat (cat clone)
 if [[ $(isinstalled bat) == 1 ]]; then
-    sourceif $ZDOTDIR/.zsh_bat $thisfile
+    sourceif $ZDOTDIR/assets/.zsh_bat $thisfile
 fi
 
 ## brew (package manager)
 if [[ $(isinstalled brew) == 1 ]]; then
-    sourceif $ZDOTDIR/.zsh_brew $thisfile
+    sourceif $ZDOTDIR/assets/.zsh_brew $thisfile
 fi
 
 ## fzf (fuzzy finder)
 if [[ $(isinstalled fzf) == 1 ]]; then
-    sourceif $ZDOTDIR/.zsh_fzf $thisfile
+    sourceif $ZDOTDIR/assets/.zsh_fzf $thisfile
 fi
 
 ## thefuck (corrects previous command)
 if [[ $(isinstalled thefuck) == 1 ]]; then
-    sourceif $ZDOTDIR/.zsh_thefuck $thisfile
+    sourceif $ZDOTDIR/assets/.zsh_thefuck $thisfile
+fi
+
+## python virtual environment
+if [[ $(isinstalled python3) == 1 ]]; then
+    sourceif $ZDOTDIR/assets/.zsh_python $thisfile
 fi
 
 ## yazi file manager
 if [[ $(isinstalled yazi) == 1 ]]; then
-    sourceif $ZDOTDIR/.zsh_yazi $thisfile
+    sourceif $ZDOTDIR/assets/.zsh_yazi $thisfile
 fi
 
 ## zoxide (cd replacement)
 if [[ $(isinstalled zoxide) == 1 ]]; then
-    sourceif $ZDOTDIR/.zsh_zoxide $thisfile
+    sourceif $ZDOTDIR/assets/.zsh_zoxide $thisfile
 fi
 
 # ALIASES
 
-sourceif $ZDOTDIR/.zsh_aliases $thisfile
+sourceif $ZDOTDIR/.zaliases $thisfile
 
 # CLEANUP
 
@@ -57,4 +58,7 @@ if [[ -d $ZDOTDIR/.zsh_sessions ]]; then
     rm -rf $ZDOTDIR/.zsh_sessions > /dev/null 2>&1
 fi
 
-export ZSHRC_LOADED=1
+
+# login files tracking - keep at the end
+export ZFILES_COUNT=$((ZFILES_COUNT + 1))
+export ZFILE_RC=1

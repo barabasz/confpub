@@ -1,13 +1,13 @@
 #!/bin/zsh
 
-# track loaded files
-# local thispath="${(%):-%x}"
-zsh_files+=("zprofile")
-
+# brew fallback
 if [[ -f /opt/homebrew/bin/brew ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 elif [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
-export ZPROFILE_LOADED=1
+
+# login files tracking - keep at the end
+export ZFILES_COUNT=$((ZFILES_COUNT + 1))
+export ZFILE_PROFILE=1

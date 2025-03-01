@@ -1,9 +1,5 @@
 #!/bin/zsh
 
-# track loaded files
-# local thispath="${(%):-%x}"
-zsh_files+=("zsh_aliases")
-
 # Global
 
 alias -g G='| grep'
@@ -128,3 +124,8 @@ if [[ $(isinstalled zoxide) == 1 ]]; then
     alias cd..='z ..'
     alias zz='z -'
 fi
+
+
+# login files tracking - keep at the end
+export ZFILES_COUNT=$((ZFILES_COUNT + 1))
+export ZFILE_ALIASES=1

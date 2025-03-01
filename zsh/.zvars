@@ -1,9 +1,5 @@
 #!/bin/zsh
 
-# track loaded files
-# local thispath="${(%):-%x}"
-zsh_files+=("zsh_env")
-
 # If set to 1 shows login info from .zlogin
 export LOGIN_INFO=1
 
@@ -13,6 +9,7 @@ export HISTSIZE=1000
 export HISTFILESIZE=1000
 
 # DIRECTORIES
+
 ## zsh
 export ZDOTDIR=$HOME/.config/zsh
 ## Temp
@@ -44,6 +41,9 @@ hash -d config=$CONFDIR
 export DLDIR=$HOME/Downloads
 export CACHEDIR=$HOME/.cache
 [[ ! -d $CACHEDIR ]] && mkdir -p $CACHEDIR
+export VENVDIR=$HOME/.venv
+[[ ! -d $VENVDIR ]] && mkdir -p $VENVDIR
+hash -d venv=$VENVDIR
 
 # ZSH
 export SHELL_SESSION_DIR="$CACHEDIR/.zsh_sessions"
@@ -91,3 +91,8 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p --paging always'"
 # ENABLE_CORRECTION="true"
 COMPLETION_WAITING_DOTS="true"
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+
+# login files tracking - keep at the end
+export ZFILES_COUNT=$((ZFILES_COUNT + 1))
+export ZFILE_VARS=1

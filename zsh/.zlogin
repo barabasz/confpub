@@ -1,16 +1,13 @@
 #!/bin/zsh
 
-# track loaded files
-# local thispath="${(%):-%x}"
-zsh_files+=("zlogin")
+# login files tracking - keep at the end
+export ZFILES_COUNT=$((ZFILES_COUNT + 1))
+export ZFILE_LOGIN=1
 
-# LOGIN INFO
-
+# show login info
 if [[ $LOGIN_INFO == 1 ]]; then
     sysinfo
     loginfiles
     logininfo
     printf "\n"
 fi
-
-export ZLOGIN_LOADED=1

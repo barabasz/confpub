@@ -1,14 +1,10 @@
 #!/bin/zsh
 
-# track loaded files
-local thisfile="zshenv"
-zsh_files+=("$thisfile")
-
 # zsh configuration directory
 export ZDOTDIR=$HOME/.config/zsh
 
 # load environment variables
-source $ZDOTDIR/.zsh_env
+source $ZDOTDIR/.zvars
 
 # load functions
 for f in "$LIBDIR"/*.sh; do
@@ -19,6 +15,9 @@ done
 [[ "$(osname)" =~ ^(debian|ubuntu)$ ]] && source "$LIBDIR/_linux.sh"
 
 # locale
-sourceif $ZDOTDIR/.zsh_locale $thisfile
+sourceif $ZDOTDIR/.zlocale $thisfile
 
-export ZSHENV_LOADED=1
+
+# login files tracking - keep at the end
+export ZFILES_COUNT=$((ZFILES_COUNT + 1))
+export ZFILE_ENV=1

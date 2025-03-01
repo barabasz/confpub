@@ -4,6 +4,7 @@
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US:en:C
 export LC_MESSAGES=en_US.UTF-8
+
 # Polish locale
 export LC_ADDRESS=pl_PL.UTF-8
 export LC_COLLATE=pl_PL.UTF-8
@@ -16,5 +17,11 @@ export LC_NUMERIC=pl_PL.UTF-8
 export LC_PAPER=pl_PL.UTF-8
 export LC_TELEPHONE=pl_PL.UTF-8
 export LC_TIME=pl_PL.UTF-8
+
 # Do not set LC_ALL, it overrides all other LC_* settings
 export LC_ALL=
+
+
+# login files tracking - keep at the end
+export ZFILES_COUNT=$((ZFILES_COUNT + 1))
+export ZFILE_LOCALE=1

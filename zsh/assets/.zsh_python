@@ -1,0 +1,6 @@
+#!/bin/zsh
+
+[[ ! -d "$VENVDIR/python" ]] && mkdir -p "$VENVDIR/python"
+
+export PATH=$VENVDIR/python/bin:$PATH
+source ~/.venv/python/bin/activate

@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # end of shell files tracking - keep at the top
-export ZFILES_COUNT=$((ZFILES_COUNT + 1))
+ZFILES_COUNT=$((ZFILES_COUNT + 1))
 export ZFILE_LOGIN=1
 
 # show login info

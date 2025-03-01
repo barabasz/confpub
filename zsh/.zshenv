@@ -2,6 +2,8 @@
 
 # zsh configuration directory
 export ZDOTDIR=$HOME/.config/zsh
+# shell files counter
+export ZFILES_COUNT=0
 
 # load environment variables
 source $ZDOTDIR/.zvars
@@ -19,5 +21,5 @@ sourceif $ZDOTDIR/.zlocale $thisfile
 
 
 # shell files tracking - keep at the end
-export ZFILES_COUNT=$((ZFILES_COUNT + 1))
+ZFILES_COUNT=$((ZFILES_COUNT + 1))
 export ZFILE_ENV=1

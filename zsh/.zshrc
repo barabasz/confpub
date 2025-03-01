@@ -60,5 +60,5 @@ fi
 
 
 # shell files tracking - keep at the end
-export ZFILES_COUNT=$((ZFILES_COUNT + 1))
+ZFILES_COUNT=$((ZFILES_COUNT + 1))
 export ZFILE_RC=1

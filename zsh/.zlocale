@@ -22,6 +22,6 @@ export LC_TIME=pl_PL.UTF-8
 export LC_ALL=
 
 
-# login files tracking - keep at the end
+# shell files tracking - keep at the end
 export ZFILES_COUNT=$((ZFILES_COUNT + 1))
 export ZFILE_LOCALE=1

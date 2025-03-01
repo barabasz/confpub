@@ -59,6 +59,6 @@ if [[ -d $ZDOTDIR/.zsh_sessions ]]; then
 fi
 
 
-# login files tracking - keep at the end
+# shell files tracking - keep at the end
 export ZFILES_COUNT=$((ZFILES_COUNT + 1))
 export ZFILE_RC=1

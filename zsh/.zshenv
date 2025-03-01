@@ -18,6 +18,6 @@ done
 sourceif $ZDOTDIR/.zlocale $thisfile
 
 
-# login files tracking - keep at the end
+# shell files tracking - keep at the end
 export ZFILES_COUNT=$((ZFILES_COUNT + 1))
 export ZFILE_ENV=1

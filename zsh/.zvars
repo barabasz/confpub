@@ -93,6 +93,6 @@ COMPLETION_WAITING_DOTS="true"
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 
-# login files tracking - keep at the end
+# shell files tracking - keep at the end
 export ZFILES_COUNT=$((ZFILES_COUNT + 1))
 export ZFILE_VARS=1

@@ -13,9 +13,6 @@ for f in "$LIBDIR"/*.sh; do
     [[ -f "$f" && ! "$(basename "$f")" =~ ^_ ]] && source "$f"
 done
 
-# extra functions for linux
-[[ "$(osname)" =~ ^(debian|ubuntu)$ ]] && source "$LIBDIR/_linux.sh"
-
 # locale
 sourceif $ZDOTDIR/.zlocale $thisfile
 

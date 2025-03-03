@@ -32,6 +32,8 @@ export SSH_AUTH_SOCK="$SSH_HOME/ssh_auth.sock"
 ## Other
 export BINDIR=$HOME/bin
 [[ ! -d $BINDIR ]] && mkdir -p $BINDIR
+export LOCALBIN=${XDG_BIN_HOME:-$HOME/.local/bin}
+[[ ! -d $LOCALBIN ]] && mkdir -p $BINDIR
 hash -d bin=$BINDIR
 export HOMEDIR=$HOME
 export LIBDIR=$HOME/lib

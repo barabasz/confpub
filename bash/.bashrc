@@ -11,7 +11,6 @@ export XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
 export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-$HOME/.xdg}
 export XDG_PROJECTS_DIR=${XDG_PROJECTS_DIR:-$HOME/Projects}
 export BINDIR=$HOME/bin
-export HOMEDIR=$HOME
 export GHDIR=$HOME/GitHub
 export GHBINDIR=$GHDIR/bin
 export GHCONFDIR=$GHDIR/config

@@ -51,6 +51,10 @@ fi
 
 sourceif $ZDOTDIR/.zaliases $thisfile
 
+# DIR HASHES
+
+sourceif $ZDOTDIR/.zdirs $thisfile
+
 # CLEANUP
 
 # https://bit.ly/zsh_sessions
